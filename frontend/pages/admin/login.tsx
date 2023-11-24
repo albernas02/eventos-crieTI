@@ -30,7 +30,7 @@ export default function Login() {
         setTimeout(() => {
             setLoading(false)
             toast.success("Bem-vindo")
-            Router.push("/dashboard")
+            Router.push("/admin")
         }, 2000)
     }
     return (
@@ -42,7 +42,7 @@ export default function Login() {
         >
             <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
                 <Stack align={"center"}>
-                    <Heading fontSize={"4xl"}>Faça seu login</Heading>
+                    <Heading fontSize={"4xl"}>Área Administrativa</Heading>
                 </Stack>
                 <Box
                     rounded={"lg"}
@@ -68,8 +68,6 @@ export default function Login() {
                                 >
                                     Acessar
                                 </Button>
-
-                                <Flex gap={1} justify={"center"}>Não tem uma conta? <Link href="/registro"><Text color="purple.400">Registre-se</Text></Link></Flex>
 
                             </Stack>
                         </Stack>

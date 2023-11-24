@@ -38,7 +38,7 @@ export default function Registro() {
             justify={"center"}
             bg={useColorModeValue("gray.50", "gray.800")}
         >
-            <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
+            <Stack spacing={8} mx={"auto"} maxW={"lg"} minW={"md"} py={12} px={6}>
                 <Stack align={"center"}>
                     <Heading fontSize={"4xl"}>Crie sua conta</Heading>
                 </Stack>
@@ -53,6 +53,14 @@ export default function Registro() {
                         <FormControl id="name" isRequired>
                                 <FormLabel>Nome</FormLabel>
                                 <Input type="text" {...register('name')} />
+                            </FormControl>
+                            <FormControl id="phone" isRequired>
+                                <FormLabel>Telefone</FormLabel>
+                                <Input minLength={8} type="tel" {...register('phone')} />
+                            </FormControl>
+                            <FormControl id="cpf" isRequired>
+                                <FormLabel>CPF</FormLabel>
+                                <Input minLength={11} type="tel" {...register('cpf')} />
                             </FormControl>
                             <FormControl id="email" isRequired>
                                 <FormLabel>Email</FormLabel>
