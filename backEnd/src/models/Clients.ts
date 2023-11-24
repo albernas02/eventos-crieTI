@@ -31,7 +31,7 @@ export class Clients extends BaseEntity {
     @Column()
     situation: string;
 
-    @ManyToOne(() => Events, events => events.clients, { eager: true })
+    @ManyToOne(() => Events, events => events.clients)
     @JoinColumn({ name: "client_id" })
     events: Events;
 }

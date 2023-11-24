@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import { Request, Response } from "express";
 import { Clients } from "../models/Clients";
 import { Users } from "../models/Users";
@@ -36,26 +37,30 @@ export class UsersControllers {
     async create(req: Request, res: Response): Promise<Response> {
         let body = req.body;
 
+        let password = await bcrypt.hash(body.password, 10);
+        
         let client: Clients = await Clients.create({
             name: body.name,
             email: body.email,
-            password: body.password,
+            password: password,
             phone: body.phone,
             CPF: body.cpf,
             address: body.address,
             situation: 'A'
         }).save();
-
+        
         return res.status(200).json(client);
     }
 
     async update(req: Request, res: Response): Promise<Response> {
         let body = req.body;
         let client: Clients = res.locals.user;
+        
+        let password = await bcrypt.hash(body.password, 10);
 
         client.name = body.name;
         client.email = body.email;
-        client.password = body.password;
+        client.password = password;
         client.phone = body.phone;
         client.CPF = body.cpf;
         client.address = body.address;
