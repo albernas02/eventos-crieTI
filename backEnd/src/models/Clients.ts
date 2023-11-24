@@ -1,8 +1,8 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Events } from "./Events";
 
 @Entity('clients')
-export class Clients {
+export class Clients extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -11,6 +11,9 @@ export class Clients {
 
     @Column()
     email: string;
+
+    @Column()
+    password: string;
 
     @Column()
     phone: string;
