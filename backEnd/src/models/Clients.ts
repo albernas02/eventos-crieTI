@@ -1,6 +1,7 @@
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Events } from "./Events";
 
+// Creio que o nome correto seria customers 
 @Entity('clients')
 export class Clients extends BaseEntity {
     @PrimaryGeneratedColumn()
@@ -18,12 +19,15 @@ export class Clients extends BaseEntity {
     @Column()
     phone: string;
 
+    // Acho que o nome da coluna precisa ser cpf em minúsculo, acho que como está aqui a coluna no banco ficará como
     @Column()
     CPF: string;
 
+    // Acho que esse campo não é necessário
     @Column()
     address: string;
 
+    // Qual seria a função desse campo?
     @Column()
     situation: string;
 

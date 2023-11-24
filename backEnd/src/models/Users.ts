@@ -18,6 +18,7 @@ export class Users extends BaseEntity {
     @Column()
     phone: string;
 
+    // Creio que não precisa de cpf e endereço para o administrador, ele não irá ao evento, somente gerenciará o sistema
     @Column()
     CPF: string;
 
