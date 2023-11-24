@@ -37,6 +37,7 @@ import { Children } from 'react'
 import { TbCalendar } from "react-icons/tb";
 import { IoTicketOutline } from "react-icons/io5";
 import { HiOutlineUsers } from "react-icons/hi2";
+import { Image } from '@chakra-ui/react'
 
 interface LinkItemProps {
     name: string
@@ -75,9 +76,9 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
             h="full"
             {...rest}>
             <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-                <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-                    Logo
-                </Text>
+                <Box>
+                    <Image src="../../imagens/9086986.png" alt='logo' />
+                </Box>
                 <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
             </Flex>
             {LinkItems.map((link) => (
@@ -160,7 +161,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                             <HStack>
                                 <Avatar
                                     size={'sm'}
-                                    name= 'Joaozinho'
+                                    name='Joaozinho'
                                 />
                                 <VStack
                                     display={{ base: 'none', md: 'flex' }}
@@ -190,7 +191,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
     )
 }
 
-export default function AppLayout({children}) {
+export default function AppLayout({ children }) {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     return (
