@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Events } from "./Events";
 
 // Creio que o nome correto seria customers 
@@ -31,7 +31,7 @@ export class Clients extends BaseEntity {
     @Column()
     situation: string;
 
-    @ManyToOne(() => Events, events => events.clients)
+    @ManyToMany(() => Events, events => events.clients)
     @JoinColumn({ name: "client_id" })
-    events: Events;
+    events: Events[];
 }

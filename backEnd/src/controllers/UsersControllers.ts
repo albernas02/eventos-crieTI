@@ -44,22 +44,25 @@ export class UsersControllers {
         user.email = body.email;
         user.password = password;
         user.phone = body.phone;
-        user.CPF = body.cpf;
+        user.CPF = body.CPF;
         user.address = body.address;
         user.situation = 'A';
 
-        await user.save();
+        await user.save()
 
         return res.status(200).json(user);
     }
 
     async delete(req: Request, res: Response): Promise<Response> {
-        let body = req.body;
         let user: Users = res.locals.user;
+
+        if (!user) {
+            return res.status(200).json({ message: "Evento não encontrado" });
+        }
 
         user.situation = 'I';
 
-        await user.save();
+        await user.save()
 
         return res.status(200).json(user);
     }

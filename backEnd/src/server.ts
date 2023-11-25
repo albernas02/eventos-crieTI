@@ -2,6 +2,8 @@ import express, { Express, NextFunction, Request, Response } from "express";
 import cors from "cors";
 import { basicAuth } from "./middlewares/basics-auth-user";
 import usersRoutes from './routes/users'
+import clientsRoutes from './routes/clients'
+import eventsRoutes from './routes/events'
 import autentiticationUsersRoutes from './routes/autenticationUser'
 import autenticationClientsRoutes from './routes/autenticationClients'
 
@@ -14,6 +16,8 @@ server.use(express.json());
 server.use(autentiticationUsersRoutes);
 server.use(autenticationClientsRoutes);
 server.use(usersRoutes);
+server.use(clientsRoutes);
+server.use(eventsRoutes);
 
 server.use((req: Request, res: Response, next: NextFunction) => {
     console.log('[' + (new Date) + ']' + req.method + ' ' + req.url);

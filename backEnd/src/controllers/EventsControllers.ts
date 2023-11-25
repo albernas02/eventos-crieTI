@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Events } from "../models/Events";
 import { Users } from "../models/Users";
+import { format } from "date-fns";
 
 
 export class EventsControllers {
@@ -25,12 +26,12 @@ export class EventsControllers {
             where: { situation: "A" },
         });
 
-        let events = aux.filter(event => event.endDate > new Date());
+        // let events = aux.filter(event => event.endDate > new Date());
 
-        events.forEach((element) => element.situation = 'I', (element) => element.save());
+        // events.forEach((element) => element.situation = 'I', (element) => element.save());
 
 
-        return res.status(200).json(events);
+        return res.status(200).json(aux);
     }
 
 
@@ -43,7 +44,8 @@ export class EventsControllers {
     async create(req: Request, res: Response): Promise<Response> {
         let body = req.body;
 
-        let user: Users | any = localStorage.getItem('user');
+        // let user: Users | any = localStorage.getItem('user');
+        let user: Users | null = await Users.findOneBy({ id: body.user })
 
         if (!user) {
             return res.status(400).json({ message: "Usúario não encontrado" })
@@ -51,10 +53,10 @@ export class EventsControllers {
 
         let client: Events = await Events.create({
             name: body.name,
-            address: body.email,
-            description: body.password,
-            startDate: body.phone,
-            endDate: body.cpf,
+            address: body.address,
+            description: body.description,
+            startDate: body.startDate,
+            endDate: body.endDate,
             situation: 'A',
             user: user,
         }).save();
@@ -64,9 +66,10 @@ export class EventsControllers {
 
     async update(req: Request, res: Response): Promise<Response> {
         let body = req.body;
-        let event: Events = res.locals.user;
+        let event: Events = res.locals.event;
 
-        let user: Users | any = localStorage.getItem('user');
+        let user: Users | null = await Users.findOneBy({ id: body.user })
+        // let user: Users | any = localStorage.getItem('user');
 
         if (!user) {
             return res.status(400).json({ message: "Usúario não encontrado" })
@@ -87,7 +90,11 @@ export class EventsControllers {
     async delete(req: Request, res: Response): Promise<Response> {
         let body = req.body;
 
-        let events: Events = res.locals.events;
+        let events: Events = res.locals.event;
+
+        if (!events) {
+            return res.status(200).json({ message: "Evento não encontrado" });
+        }
 
         events.situation = 'I';
 
