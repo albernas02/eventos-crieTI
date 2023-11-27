@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Users } from "./Users";
 import { Clients } from "./Clients";
 
@@ -18,19 +18,19 @@ export class Events extends BaseEntity {
     description: string;
 
     @Column()
-    startDate: Date;
+    startDate: string;
 
     @Column()
-    endDate: Date;
+    endDate: string;
 
     @Column()
     situation: string;
-    
-    @ManyToOne(() => Users, user => user.events, { eager: true })
+
+    @ManyToOne(() => Users, user => user.events)
     @JoinColumn({ name: "user_id" })
     user: Users;
 
-    @OneToMany(() => Clients, clients => clients.events, { eager: true })
+    @ManyToMany(() => Clients, clients => clients.events)
     @JoinColumn({ name: "clients_id" })
     clients: Clients[];
 }
