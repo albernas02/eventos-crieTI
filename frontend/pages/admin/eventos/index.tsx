@@ -155,6 +155,9 @@ export default function Eventos() {
                 } else {
                     response = await apiClient.post(`/events`, values);
                 }
+
+                onClose()
+
             } catch (err) {
                 toast.error((err as any)?.response?.data?.mensagem || 'Algo deu errado! Por favor, tente novamente mais tarde.');
             }
