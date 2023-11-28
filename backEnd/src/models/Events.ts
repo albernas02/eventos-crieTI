@@ -7,6 +7,9 @@ import { Clients } from "./Clients";
 export class Events extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
+    
+    @Column()
+    type: string;
 
     @Column()
     name: string;
@@ -18,10 +21,11 @@ export class Events extends BaseEntity {
     description: string;
 
     @Column()
-    startDate: string;
+    startDate: Date;
+
 
     @Column()
-    endDate: string;
+    endDate: Date;
 
     @Column()
     situation: string;
