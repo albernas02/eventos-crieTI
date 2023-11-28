@@ -10,6 +10,7 @@ let controller: EventsControllers = new EventsControllers();
 async function validarPayload(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     let schema = yup.object({
         name: yup.string().min(3).max(255).required(),
+        type: yup.string().min(3).max(255).required(),
         address: yup.string().min(3).max(255).required(),
         description: yup.string().max(255).required(),
         startDate: yup.string().required(),

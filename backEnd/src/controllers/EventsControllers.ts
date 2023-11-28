@@ -53,6 +53,7 @@ export class EventsControllers {
 
         let client: Events = await Events.create({
             name: body.name,
+            type: body.type,
             address: body.address,
             description: body.description,
             startDate: body.startDate,
@@ -76,6 +77,7 @@ export class EventsControllers {
         }
 
         event.name = body.name;
+        event.type = body.type;
         event.address = body.email;
         event.description = body.password;
         event.startDate = body.phone;
