@@ -48,22 +48,13 @@ async function validar(req: Request, res: Response, next: NextFunction): Promise
     return next();
 }
 
-async function validarSeEmailExiste(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
-    let name: string = req.body.name;
-    let id: number | undefined = req.params.id ? Number(req.params.id) : undefined;
-
-    let user: Events | null = await Events.findOneBy({ name, id: id ? Not(id) : undefined });
-    if (user) {
-        return res.status(422).json({ error: "Email ja cadastrado" });
-    }
-    return next();
-}
-
 let rotas: Router = Router();
 rotas.get("/events", controller.listAll);
 rotas.get("/events/:id", validar, controller.find);
-rotas.post("/events", validarPayload, validarSeEmailExiste, controller.create);
-rotas.put("/events/:id", validar, validarPayload, validarSeEmailExiste, controller.update);
+rotas.post("/events", validarPayload, controller.create);
+rotas.post("/checkIn/:id", controller.checkIn);
+rotas.post("/checkOut/:id",controller.checkOut);
+rotas.put("/events/:id", validar, validarPayload, controller.update);
 rotas.delete("/events/:id", validar, controller.delete);
 // rotas.get("/userscsv",controller.gerarCSVusers);
 
