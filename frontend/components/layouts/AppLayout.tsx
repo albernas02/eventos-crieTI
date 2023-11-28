@@ -76,9 +76,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
             h="full"
             {...rest}>
             <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-                <Box>
-                    <Image src="../../imagens/9086986.png" alt='logo' />
-                </Box>
+                    <Image src="/imagens/92969c3c-5d00-4121-a391-1c3d06d2f072.png" height="50px" width="70px" alt='logo' />
                 <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
             </Flex>
             {LinkItems.map((link) => (
@@ -145,13 +143,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                 icon={<FiMenu />}
             />
 
-            <Text
-                display={{ base: 'flex', md: 'none' }}
-                fontSize="2xl"
-                fontFamily="monospace"
-                fontWeight="bold">
-                Logo
-            </Text>
+            {/* <Image src="/imagens/92969c3c-5d00-4121-a391-1c3d06d2f072.png" marginX="alto" height="50px" width="70px" alt='logo' /> */}
 
             <HStack spacing={{ base: '0', md: '6' }}>
                 <IconButton size="lg" variant="ghost" aria-label="open menu" icon={<FiBell />} />
@@ -191,7 +183,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
     )
 }
 
-export default function AppLayout({ children }) {
+export default function AppLayout({ children }: any) {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     return (

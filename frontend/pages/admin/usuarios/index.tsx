@@ -16,7 +16,7 @@ import {
     Heading
 } from '@chakra-ui/react'
 
-export default function Eventos() {
+export default function Usuarios() {
     return <AppLayout>
         <Flex mb={"4"} alignItems={"center"} justifyContent={"space-between"} >
             <Heading size={"md"}>Usuários</Heading>

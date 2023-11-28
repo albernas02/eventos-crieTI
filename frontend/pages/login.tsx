@@ -14,25 +14,40 @@ import {
     useColorModeValue,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import PasswordInput from '@/components/UI/PasswordInput';
 import Router from 'next/router';
+import { AuthContext } from '@/contexts/AuthContext';
+import { destroyCookie } from 'nookies';
 
 export default function Login() {
     const { register, handleSubmit } = useForm();
     const [loading, setLoading] = useState(false);
 
-    async function login(values) {
-        console.log(values)
-        setLoading(true);
+    const { login, token } = useContext(AuthContext);
 
-        setTimeout(() => {
-            setLoading(false)
-            toast.success("Bem-vindo")
-            Router.push("/dashboard")
-        }, 2000)
+    // If there already is a token, redirect to dashboard
+    useEffect(() => {
+        destroyCookie(undefined, 'token')
+    }, []);
+
+    async function onSubmit({email, password}: any) {
+        setLoading(true);
+        await login(email, password, '/loginClients');
+        setLoading(false);
     }
+
+    // async function login(values) {
+    //     console.log(values)
+    //     setLoading(true);
+
+    //     setTimeout(() => {
+    //         setLoading(false)
+    //         toast.success("Bem-vindo")
+    //         Router.push("/dashboard")
+    //     }, 2000)
+    // }
     return (
         <Flex
             minH={"100vh"}
@@ -50,7 +65,7 @@ export default function Login() {
                     boxShadow={"lg"}
                     p={8}
                 >
-                    <form onSubmit={handleSubmit(login)}>
+                    <form onSubmit={handleSubmit(onSubmit)}>
                         <Stack spacing={4}>
                             <FormControl id="email" isRequired>
                                 <FormLabel>Email</FormLabel>
