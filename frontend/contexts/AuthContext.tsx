@@ -28,7 +28,6 @@ export interface IAuthContext {
     token?: string;
     user?: IUser | null;
     login: (email: string, password: string, route: string) => Promise<void>;
-    eventos: (name: string, address: string, description: string, startDate: string, endDate: string, situation: string, route: string) => Promise<void>;
     updateUserData: () => Promise<void>;
 }
 
@@ -45,47 +44,6 @@ export function AuthProvider({ children }: any) {
             updateUserData();
         }
     }, []);
-
-    async function eventos( name: string, address: string, description: string, startDate: string, endDate: string, situation: string, route = '/admin/eventos') {
-        try {
-            const response = await apiClient.post(route, {
-                name,
-                address,
-                description,
-                startDate,
-                endDate,
-                situation
-            });
-
-            const token = response.data.token;
-
-            setCookie(undefined, 'token', token, {
-                maxAge: 60 * 60 * 24 * 7 // 7 dias
-            });
-
-            // Making sure the token is up to date
-            apiClient.defaults.headers['Authorization'] = `Bearer ${token}`;
-
-            // Fetch user data
-            await updateUserData();
-
-            toast.success('Bem vindo!', {
-                duration: 1000
-            });
-
-            Router.push('/');
-        } catch (err) {
-            if (err instanceof AxiosError) {
-                if (err.response?.data?.mensagem) {
-                    toast.error(err.response.data.mensagem);
-                }
-                return;
-            }
-
-            toast.error('Algo deu errado! Por favor, tente novamente mais tarde.');
-        }
-    }
-
 
     async function login( email: string, password: string, route = '/loginUsers') {
         try {
@@ -160,7 +118,7 @@ export function AuthProvider({ children }: any) {
     }
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, user, token, login, updateUserData, eventos }}>
+        <AuthContext.Provider value={{ isAuthenticated, user, token, login, updateUserData }}>
             {children}
         </AuthContext.Provider>
     );

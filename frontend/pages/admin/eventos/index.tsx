@@ -1,5 +1,5 @@
 import AppLayout from "@/components/layouts/AppLayout";
-import { PiFileCsvLight } from "react-icons/pi";
+import { PiFileCsvLight, PiPencil } from "react-icons/pi";
 import { PiFilePdfLight } from "react-icons/pi";
 import { PiPlusLight } from "react-icons/pi";
 import { Select } from '@chakra-ui/react'
@@ -32,18 +32,37 @@ import {
     ModalBody,
     ModalCloseButton,
 } from "@chakra-ui/react";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Form, useForm } from "react-hook-form";
 import { AuthContext } from "@/contexts/AuthContext";
+import { apiClient } from "@/services/api";
+import toast from "react-hot-toast";
+import moment from "moment";
+
+interface IEvento {
+    id?: number;
+    name: string;
+    description: string;
+    address: string;
+    startDate: Date;
+    endDate: Date;
+    situation: string;
+    user: number;
+    type: string;
+}
 
 export default function Eventos() {
-    const { register, handleSubmit } = useForm();
+    const [ dados, setDados ] = useState<IEvento[]>([]);
 
-    const { eventos } = useContext(AuthContext);
+    async function carregarDados() {
+        let response = await apiClient.get('/events');
 
-    async function onSubmit({name, address, description, startDate, endDate, situation}: any) {
-        await eventos(name, address, description, startDate, endDate, situation, '/admin/eventos');
+        setDados(response.data);
     }
+    
+    useEffect(() => {
+        carregarDados();
+    }, []);
 
     return (
         <AppLayout>
@@ -66,7 +85,7 @@ export default function Eventos() {
                     >
                         PDV
                     </Button>
-                    <CadastroEventos/>
+                    <CadastroEventos />
                 </Flex>
             </Flex>
             <TableContainer>
@@ -78,82 +97,136 @@ export default function Eventos() {
                             <Th>Endereço</Th>
                             <Th>Início</Th>
                             <Th>Fim</Th>
+                            <Th>Categoria</Th>
                             <Th>Status</Th>
                             <Th textAlign={"right"}>Ações</Th>
                         </Tr>
                     </Thead>
-                    <Tbody></Tbody>
+                    <Tbody>
+                        {
+                            dados?.map(evento => <Tr>
+                                <Td>{evento.name}</Td>
+                                <Td>{evento.description}</Td>
+                                <Td>{evento.address}</Td>
+                                <Td>{moment(evento.startDate).format('llll')}</Td>
+                                <Td>{moment(evento.endDate).format('llll')}</Td>
+                                <Td>{evento.type}</Td>
+                                <Td>{evento.situation}</Td>
+                                {/* ... */}
+
+                                <Td>
+                                    <CadastroEventos evento={evento} textoBotao="Editar" icone={<PiPencil/>} />
+                                </Td>
+                            </Tr>)
+                        }
+
+                    </Tbody>
                 </Table>
             </TableContainer>
         </AppLayout>
     );
 
 
-    function CadastroEventos() {
+    function CadastroEventos({ evento, textoBotao = "Novo", icone = <PiPlusLight /> }: {evento?: IEvento, textoBotao?: string, icone?: any}) {
         const { isOpen, onOpen, onClose } = useDisclosure();
 
-        const initialRef = React.useRef(null);
-        const finalRef = React.useRef(null);
+        const { register, handleSubmit } = useForm({
+            defaultValues: {
+                name: evento?.name,
+                description: evento?.description,
+                address: evento?.address,
+                startDate: evento?.startDate,
+                endDate: evento?.endDate,
+                type: evento?.type,
+                situation: evento?.situation
+
+            }
+        });
+
+        async function onSubmit(values: any) {
+            try {
+                let response = null;
+
+                // corrigir mais tarde 
+                values.user = 5; 
+                if (evento?.id) {
+                    // Editar
+                    response = await apiClient.put(`/events/${evento?.id}`, values);
+                } else {
+                    response = await apiClient.post(`/events`, values);
+                }
+            } catch (err) {
+                toast.error((err as any)?.response?.data?.mensagem || 'Algo deu errado! Por favor, tente novamente mais tarde.');
+            }
+        }
+
+        let randomId = (Math.random() + 1).toString(36).substring(7);
 
         return (
             <>
-            <Button onClick={onOpen}
-                        size={"sm"}
-                        leftIcon={<PiPlusLight />}
-                        colorScheme="green"
-                        variant={"outline"}
-                    >
-                        Novo
-                    </Button>
+                <Button onClick={onOpen}
+                    size={"sm"}
+                    leftIcon={icone}
+                    colorScheme="green"
+                    variant={"outline"}
+                >
+                    {textoBotao}
+                </Button>
                 <Modal
-                    initialFocusRef={initialRef}
-                    finalFocusRef={finalRef}
                     isOpen={isOpen}
                     onClose={onClose}
                 >
                     <ModalOverlay />
                     <ModalContent>
-                        <ModalHeader>Cadastrar Novo Evento</ModalHeader>
+                        <ModalHeader>Evento</ModalHeader>
                         <ModalCloseButton />
                         <ModalBody pb={6}>
-                        <form onSubmit={handleSubmit(onSubmit)}>
-                            <FormControl id="name">
-                                <FormLabel>Nome</FormLabel>
-                                <Input placeholder="" {...register('name')} />
-                            </FormControl>
+                            <form onSubmit={handleSubmit(onSubmit)} id={randomId}>
+                                <FormControl id="name" isRequired>
+                                    <FormLabel>Nome</FormLabel>
+                                    <Input {...register('name')} />
+                                </FormControl>
 
-                            <FormControl id="description" mt={4}>
-                                <FormLabel>Descrição</FormLabel>
-                                <Input placeholder="" {...register('description')} />
-                            </FormControl>
+                                <FormControl id="description" isRequired mt={4}>
+                                    <FormLabel>Descrição</FormLabel>
+                                    <Input {...register('description')} />
+                                </FormControl>
 
-                            <FormControl id="address" mt={4}>
-                                <FormLabel>Endereço</FormLabel>
-                                <Input placeholder="" {...register('address')} />
-                            </FormControl>
+                                <FormControl id="address" isRequired mt={4}>
+                                    <FormLabel>Endereço</FormLabel>
+                                    <Input {...register('address')} />
+                                </FormControl>
 
-                            <FormControl id="startDate" mt={4}>
-                                <FormLabel>Data de Início</FormLabel>
-                                <Input placeholder="" {...register('startDate')} />
-                            </FormControl>
+                                <FormControl id="startDate" isRequired mt={4}>
+                                    <FormLabel>Data de Início</FormLabel>
+                                    <Input  type="datetime-local" {...register('startDate')} />
+                                </FormControl>
 
-                            <FormControl id="endDate" mt={4}>
-                                <FormLabel>Data do Fim</FormLabel>
-                                <Input placeholder="" {...register('endDate')} />
-                            </FormControl>
+                                <FormControl id="endDate" isRequired mt={4}>
+                                    <FormLabel>Data do Fim</FormLabel>
+                                    <Input type="datetime-local" {...register('endDate')} />
+                                </FormControl>
 
-                            <FormControl id="situation" mt={4}>
-                                <FormLabel>Status</FormLabel>
+                                <FormControl id="type" isRequired mt={4}>
+                                    <FormLabel>Categoria</FormLabel>
+                                    <Select placeholder='Selecione uma opção' {...register('type')}>
+                                        <option value='Presencial'>Presencial</option>
+                                        <option value='Online'>Online</option>
+                                    </Select>
+                                </FormControl>
+
+                                <FormControl id="situation" isRequired mt={4}>
+                                    <FormLabel>Status</FormLabel>
                                     <Select placeholder='Selecione uma opção' {...register('situation')}>
                                         <option value='Ativo'>Ativo</option>
                                         <option value='Inativo'>Inativo</option>
                                     </Select>
-                            </FormControl>
+                                </FormControl>
                             </form>
                         </ModalBody>
 
                         <ModalFooter>
-                            <Button colorScheme="purple" mr={3}>
+                            <Button colorScheme="purple" mr={3} type="submit" form={randomId}>
                                 Salvar
                             </Button>
                             <Button onClick={onClose}>Cancelar</Button>
