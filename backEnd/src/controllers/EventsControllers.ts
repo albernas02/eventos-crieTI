@@ -27,9 +27,9 @@ export class EventsControllers {
             where: { situation: "A" },
         });
 
-        // let events = aux.filter(event => event.endDate > new Date());
+        let events = aux.filter(event => event.endDate > new Date());
 
-        // events.forEach((element) => element.situation = 'I', (element) => element.save());
+        events.forEach((element) => element.situation = 'I', (element) => element.save());
 
 
         return res.status(200).json(aux);
@@ -45,6 +45,18 @@ export class EventsControllers {
     async create(req: Request, res: Response): Promise<Response> {
         let body = req.body;
 
+        let startDate = body.startDate;
+        let endDate = body.endDate;
+
+        let parts = startDate.split('/');
+        startDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
+
+        parts = endDate.split('/');
+        endDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
+
+        startDate = new Date(startDate)
+        endDate = new Date(endDate)
+
         // let user: Users | any = localStorage.getItem('user');
         let user: Users | null = await Users.findOneBy({ id: body.user })
 
@@ -57,8 +69,8 @@ export class EventsControllers {
             type: body.type,
             address: body.address,
             description: body.description,
-            startDate: body.startDate,
-            endDate: body.endDate,
+            startDate: startDate,
+            endDate: endDate,
             situation: 'A',
             user: user,
         }).save();
@@ -66,9 +78,22 @@ export class EventsControllers {
         return res.status(200).json(client);
     }
 
+
     async update(req: Request, res: Response): Promise<Response> {
         let body = req.body;
         let event: Events = res.locals.event;
+
+        let startDate = body.startDate;
+        let endDate = body.endDate;
+
+        let parts = startDate.split('/');
+        startDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
+
+        parts = endDate.split('/');
+        endDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
+
+        startDate = new Date(startDate)
+        endDate = new Date(endDate)
 
         let user: Users | null = await Users.findOneBy({ id: body.user })
         // let user: Users | any = localStorage.getItem('user');
@@ -79,10 +104,10 @@ export class EventsControllers {
 
         event.name = body.name;
         event.type = body.type;
-        event.address = body.email;
-        event.description = body.password;
-        event.startDate = body.phone;
-        event.endDate = body.cpf;
+        event.address = body.address;
+        event.description = body.description;
+        event.startDate = startDate;
+        event.endDate = endDate;
         event.user = user;
 
         await event.save();
@@ -96,9 +121,8 @@ export class EventsControllers {
             let eventId = res.locals.event;
             let clientId = body.clientId;
 
-            // Assuming Events and Clients are the respective model classes
-            const event: Events | null = await Events.findOneBy({ id: eventId });
-            const client: Clients | null = await Clients.findOneBy({ id: clientId });
+            let event: Events | null = await Events.findOneBy({ id: eventId });
+            let client: Clients | null = await Clients.findOneBy({ id: clientId });
 
             if (!event) {
                 return res.status(400).json({ message: "Evento não encontrado" });
@@ -108,14 +132,12 @@ export class EventsControllers {
                 return res.status(400).json({ message: "Cliente não encontrado" });
             }
 
-            // Assuming there's a many-to-many relationship using EventClient as the join entity
             if (!event.clients) {
                 event.clients = [];
             }
 
             event.clients.push(client);
 
-            // Assuming there's a method like 'save' in your Events model
             await event.save();
 
             return res.status(200).json(event);
@@ -131,9 +153,8 @@ export class EventsControllers {
             let eventId = res.locals.event;
             let clientId = body.clientId;
 
-            // Assuming Events and Clients are the respective model classes
-            const event: Events | null = await Events.findOneBy({ id: eventId });
-            const client: Clients | null = await Clients.findOneBy({ id: clientId });
+            let event: Events | null = await Events.findOneBy({ id: eventId });
+            let client: Clients | null = await Clients.findOneBy({ id: clientId });
 
             if (!event) {
                 return res.status(400).json({ message: "Evento não encontrado" });
@@ -143,20 +164,16 @@ export class EventsControllers {
                 return res.status(400).json({ message: "Cliente não encontrado" });
             }
 
-            // Assuming there's a many-to-many relationship using EventClient as the join entity
             if (!event.clients) {
                 event.clients = [];
             }
 
-            // Find the index of the client in the array
-            const clientIndex = event.clients.findIndex((c) => c.id === clientId);
+            let clientIndex = event.clients.findIndex((c) => c.id === clientId);
 
-            // If the client is in the array, remove it
             if (clientIndex !== -1) {
                 event.clients.splice(clientIndex, 1);
             }
 
-            // Assuming there's a method like 'save' in your Events model
             await event.save();
 
             return res.status(200).json(event);

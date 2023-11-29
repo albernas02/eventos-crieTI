@@ -20,12 +20,11 @@ export class Events extends BaseEntity {
     @Column()
     description: string;
 
-    @Column()
-    startDate: string;
+    @Column({ type: "timestamp" })
+    startDate: Date;
 
-
-    @Column()
-    endDate: string;
+    @Column({ type: "timestamp" })
+    endDate: Date;
 
     @Column()
     situation: string;
