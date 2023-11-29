@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { Clients } from "../models/Clients";
 import bcrypt from "bcrypt";
 
-export async function basicAuth(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+export async function basicAuthClient(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     let authorization = req.headers.authorization;
 
     if (!authorization) {
@@ -26,12 +26,12 @@ export async function basicAuth(req: Request, res: Response, next: NextFunction)
         // se nao encontrar nenhum
         return res.status(401).json({ message: "Dados não encontrados!" });
     }
-    
+
     let resultado = await bcrypt.compare(password, client.password); //substitui a função que estava usando
 
     if (!resultado) {
         return res.status(401).json({ message: "Senha inválida!" }); // essas mensagens são usados no navegador
-    
+
     }
     return next();
 }
