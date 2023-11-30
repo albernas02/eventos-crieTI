@@ -12,6 +12,6 @@ export const getServerSideProps: GetServerSideProps = checkUserAuth(async (ctx) 
 
 export default function Index() {
     return <AppLayout> 
-        batata
+        index
     </AppLayout>
 }

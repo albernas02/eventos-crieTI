@@ -67,8 +67,9 @@ interface SidebarProps extends BoxProps {
 
 const LinkItems: Array<LinkItemProps> = [
     { name: 'Home', icon: FiHome, href: "/" },
+    { name: 'Eventos', icon: TbCalendar, href: "/admin/eventos", permission: "clients" },
     { name: 'Gerenciar Eventos', icon: TbCalendar, href: "/admin/eventos", permission: "users" },
-    // { name: 'Inscrições', icon: IoTicketOutline, href: "/"},
+    { name: 'Inscrições', icon: IoTicketOutline, href: "/incricoes", permission: "clients" },
     { name: 'Gerenciar Usuários', icon: HiOutlineUsers, href: "/admin/usuarios", permission: "users" },
 ]
 
