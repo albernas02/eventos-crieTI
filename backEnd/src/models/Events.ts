@@ -36,4 +36,8 @@ export class Events extends BaseEntity {
     @ManyToMany(() => Clients)
     @JoinTable()
     clients: Clients[];
+
+    @ManyToMany(() => Clients)
+    @JoinTable()
+    clientsPresence: Clients[];
 }

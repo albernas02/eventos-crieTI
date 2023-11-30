@@ -20,6 +20,7 @@ export class EventsControllers {
         });
         return res.status(200).json(event);
     }
+
     async validationDate(req: Request, res: Response): Promise<Response> {
         let name = req.query.name;
 
@@ -34,7 +35,6 @@ export class EventsControllers {
 
         return res.status(200).json(aux);
     }
-
 
     async find(req: Request, res: Response): Promise<Response> {
         let client: Events = res.locals.user;
@@ -77,7 +77,6 @@ export class EventsControllers {
 
         return res.status(200).json(client);
     }
-
 
     async update(req: Request, res: Response): Promise<Response> {
         let body = req.body;
@@ -182,7 +181,33 @@ export class EventsControllers {
             return res.status(500).json({ message: "Erro interno do servidor" });
         }
     }
+    
+    async confirmationPresence(req: Request, res: Response): Promise<Response> {
+        let body = req.body;
+        let eventId = res.locals.event;
+        let clientId = body.clientId;
 
+        let event: Events | null = await Events.findOneBy({ id: eventId });
+        let client: Clients | null = await Clients.findOneBy({ id: clientId });
+
+        if (!event) {
+            return res.status(400).json({ message: "Evento não encontrado" });
+        }
+
+        if (!client) {
+            return res.status(400).json({ message: "Cliente não encontrado" });
+        }
+
+        if (!event.clientsPresence) {
+            event.clientsPresence = [];
+        }
+
+        event.clientsPresence.push(client);
+
+        await event.save();
+
+        return res.status(200).json(event);
+    }
 
     async delete(req: Request, res: Response): Promise<Response> {
         let body = req.body;

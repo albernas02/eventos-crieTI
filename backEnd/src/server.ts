@@ -16,11 +16,11 @@ server.use(cors());
 server.use(express.json());
 
 server.use(autentiticationUsersRoutes);
-server.use(basicAuthClient, autenticationClientsRoutes);
-server.use(basicAuthUser, usersRoutes);
-server.use(basicAuthClient, clientsRoutes);
-server.use(basicAuthUser, eventsRoutes);
-server.use(basicAuthUser, exportRoutes);
+server.use(autenticationClientsRoutes);
+server.use(usersRoutes);
+server.use(clientsRoutes);
+server.use(eventsRoutes);
+server.use(exportRoutes);
 
 server.use((req: Request, res: Response, next: NextFunction) => {
     console.log('[' + (new Date) + ']' + req.method + ' ' + req.url);
