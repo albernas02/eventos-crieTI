@@ -50,6 +50,7 @@ export default function Registro() {
       align={"center"}
       justify={"center"}
       bg={useColorModeValue("gray.50", "gray.800")}
+      id="content-container"
     >
       <Stack spacing={8} mx={"auto"} maxW={"lg"} minW={"md"} py={12} px={6}>
         <Stack align={"center"}>

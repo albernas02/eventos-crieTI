@@ -10,11 +10,11 @@ export function checkUserAuth(fn: GetServerSideProps, permission_type = 'clients
 
         const { auth_type } = parseCookies(context);
 
-        if (permission_type == "admin") {
+        if (permission_type == "users") {
             if (auth_type != "users") {
                 return {
                     redirect: {
-                        destination: '/admin/login',
+                        destination: '/',
                         permanent: false
                     }
                 }

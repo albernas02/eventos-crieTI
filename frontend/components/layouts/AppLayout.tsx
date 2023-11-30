@@ -40,17 +40,21 @@ import { HiOutlineUsers } from "react-icons/hi2";
 import { Image } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+import { parseCookies } from 'nookies'
+import NextNProgress from "nextjs-progressbar";
 
 interface LinkItemProps {
     name: string
     icon: IconType
     href: string
+    permission?: string
 }
 
 interface NavItemProps extends FlexProps {
     icon: IconType
     children: React.ReactNode
     href: string
+    permission?: string
 }
 
 interface MobileProps extends FlexProps {
@@ -63,9 +67,9 @@ interface SidebarProps extends BoxProps {
 
 const LinkItems: Array<LinkItemProps> = [
     { name: 'Home', icon: FiHome, href: "/" },
-    { name: 'Eventos', icon: TbCalendar, href: "/admin/eventos" },
-    { name: 'Inscrições', icon: IoTicketOutline, href: "/"},
-    { name: 'Usuários', icon: HiOutlineUsers, href: "/admin/usuarios" },
+    { name: 'Gerenciar Eventos', icon: TbCalendar, href: "/admin/eventos", permission: "users" },
+    // { name: 'Inscrições', icon: IoTicketOutline, href: "/"},
+    { name: 'Gerenciar Usuários', icon: HiOutlineUsers, href: "/admin/usuarios", permission: "users" },
 ]
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
@@ -84,7 +88,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
                 <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
             </Flex>
             {LinkItems.map((link) => (
-                <NavItem key={link.name} icon={link.icon} href={link.href}>
+                <NavItem key={link.name} icon={link.icon} href={link.href} permission={link.permission}>
                     {link.name}
                 </NavItem>
             ))}
@@ -92,9 +96,19 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
     )
 }
 
-const NavItem = ({ icon, href, children, ...rest }: NavItemProps) => {
+const NavItem = ({ icon, href, children, permission, ...rest }: NavItemProps) => {
     const router = useRouter();
     const isActive = router.pathname == href || (href != '/' && router.pathname.startsWith(href));
+
+    if (permission) {
+        const { auth_type } = parseCookies();
+
+        if (permission != auth_type) {
+            return <></>;
+        }
+    }
+
+
     return (
         <Link href={href} style={{textDecoration: "none"}}>
         <Box
@@ -168,10 +182,10 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                                     alignItems="flex-start"
                                     spacing="1px"
                                     ml="2">
-                                    <Text fontSize="sm">Teste</Text>
-                                    <Text fontSize="xs" color="gray.600">
+                                    <Text fontSize="sm">[Nome]</Text>
+                                    {/* <Text fontSize="xs" color="gray.600">
                                         Admin
-                                    </Text>
+                                    </Text> */}
                                 </VStack>
                                 <Box display={{ base: 'none', md: 'flex' }}>
                                     <FiChevronDown />
@@ -181,8 +195,10 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                         <MenuList
                             bg={useColorModeValue('white', 'gray.900')}
                             borderColor={useColorModeValue('gray.200', 'gray.700')}>
-                            <MenuItem>Conta</MenuItem>
+                            {/* <MenuItem>Conta</MenuItem> */}
+                            <Link href="/logout">
                             <MenuItem>Sair</MenuItem>
+                            </Link>
                         </MenuList>
                     </Menu>
                 </Flex>
@@ -196,6 +212,12 @@ export default function AppLayout({ children }: any) {
 
     return (
         <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
+            <NextNProgress
+                options={{
+                    parent: "#content-container",
+                    spinner: false
+                }}
+            />
             <SidebarContent onClose={() => onClose} display={{ base: 'none', md: 'block' }} />
             <Drawer
                 isOpen={isOpen}
@@ -210,8 +232,8 @@ export default function AppLayout({ children }: any) {
             </Drawer>
             {/* mobilenav */}
             <MobileNav onOpen={onOpen} />
-            <Box ml={{ base: 0, md: 60 }} p="4">
-                <Box bg="white" rounded="md" shadow="md" padding="4" >
+            <Box ml={{ base: 0, md: 60 }} p="4" id="content-container">
+                <Box bg="white" rounded="md" shadow="md" padding="4">
                     {children}
                 </Box>
 

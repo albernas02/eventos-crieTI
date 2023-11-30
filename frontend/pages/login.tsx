@@ -25,7 +25,7 @@ export default function Login() {
   const { register, handleSubmit } = useForm();
   const [loading, setLoading] = useState(false);
 
-  const { login, token } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
 
     // If there already is a token, redirect to dashboard
     useEffect(() => {
@@ -61,6 +61,7 @@ export default function Login() {
             align={"center"}
             justify={"center"}
             bg={useColorModeValue("gray.50", "gray.800")}
+            id="content-container"
         >
             <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
                 <Stack align={"center"}>
