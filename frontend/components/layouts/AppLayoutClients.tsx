@@ -63,9 +63,8 @@ interface SidebarProps extends BoxProps {
 
 const LinkItems: Array<LinkItemProps> = [
     { name: 'Home', icon: FiHome, href: "/" },
-    { name: 'Eventos', icon: TbCalendar, href: "/admin/eventos" },
+    { name: 'Eventos', icon: TbCalendar, href: "/admin/eventosClients" },
     { name: 'Inscrições', icon: IoTicketOutline, href: "/"},
-    { name: 'Usuários', icon: HiOutlineUsers, href: "/admin/usuarios" },
 ]
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {

@@ -34,6 +34,8 @@ import React, { useEffect, useState } from "react";
 import { apiClient } from "@/services/api";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { checkUserAuth } from "@/Utils/pageAuthCheck";
+import { GetServerSideProps } from "next";
 
 interface IUsuario {
     id?: number;
@@ -45,6 +47,12 @@ interface IUsuario {
     address: string;
     situation: string;
 }
+
+export const getServerSideProps: GetServerSideProps = checkUserAuth(async (ctx) => {
+    return {
+        props: {}
+    }
+}, "users");
 
 export default function Usuarios() {
     const [ dados, setDados ] = useState<IUsuario[]>([]);

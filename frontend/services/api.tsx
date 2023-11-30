@@ -9,7 +9,7 @@ export function getAPIClient(serverSideContext?: any) {
     });
 
     if (token) {
-        api.defaults.headers['Authorization'] = 'Bearer ${token}';
+        api.defaults.headers['Authorization'] = `Bearer ${token}`;
     }
 
     return api;

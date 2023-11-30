@@ -55,7 +55,8 @@ export function AuthProvider({ children }: any) {
             const token = response.data.token;
 
             setCookie(undefined, 'token', token, {
-                maxAge: 60 * 60 * 24 * 7 // 7 dias
+                maxAge: 60 * 60 * 24 * 7, // 7 dias
+                path: "/"
             });
 
             // Making sure the token is up to date

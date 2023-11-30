@@ -38,6 +38,8 @@ import { AuthContext } from "@/contexts/AuthContext";
 import { apiClient } from "@/services/api";
 import toast from "react-hot-toast";
 import moment from "moment";
+import { GetServerSideProps } from "next";
+import { checkUserAuth } from "@/Utils/pageAuthCheck";
 
 interface IEvento {
     id?: number;
@@ -50,6 +52,12 @@ interface IEvento {
     user: number;
     type: string;
 }
+
+export const getServerSideProps: GetServerSideProps = checkUserAuth(async (ctx) => {
+    return {
+        props: {}
+    }
+}, "users");
 
 export default function Eventos() {
     const [ dados, setDados ] = useState<IEvento[]>([]);

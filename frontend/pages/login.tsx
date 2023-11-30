@@ -19,7 +19,7 @@ import toast from 'react-hot-toast';
 import PasswordInput from '@/components/UI/PasswordInput';
 import Router from 'next/router';
 import { AuthContext } from '@/contexts/AuthContext';
-import { destroyCookie } from 'nookies';
+import { destroyCookie, setCookie } from 'nookies';
 
 export default function Login() {
     const { register, handleSubmit } = useForm();
@@ -30,6 +30,11 @@ export default function Login() {
     // If there already is a token, redirect to dashboard
     useEffect(() => {
         destroyCookie(undefined, 'token')
+
+        setCookie(undefined, 'auth_type', "clients", {
+            maxAge: 60 * 60 * 24 * 7, // 7 dias
+            path: "/"
+        });
     }, []);
 
     async function onSubmit({email, password}: any) {
@@ -57,7 +62,7 @@ export default function Login() {
         >
             <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
                 <Stack align={"center"}>
-                    <Heading fontSize={"4xl"}>Faça seu login</Heading>
+                    <Heading fontSize={"2xl"}>Faça seu login</Heading>
                 </Stack>
                 <Box
                     rounded={"lg"}
@@ -73,7 +78,7 @@ export default function Login() {
                             </FormControl>
                             <FormControl id="password" isRequired>
                                 <FormLabel>Senha</FormLabel>
-                                <PasswordInput {...register('password')} />
+                                <PasswordInput register={register} name="password" />
                             </FormControl>
                             <Stack spacing={4}>
                                 <Button type='submit'
