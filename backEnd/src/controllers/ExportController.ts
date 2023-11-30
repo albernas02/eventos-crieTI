@@ -3,6 +3,7 @@ import { Between, ILike } from "typeorm";
 import { Events } from "../models/Events";
 import * as nodemailer from "nodemailer";
 import * as puppeteer from "puppeteer";
+import { Clients } from "../models/Clients";
 
 export class ExportController {
   async downloadPdf(req: Request, res: Response) {
@@ -39,7 +40,7 @@ export class ExportController {
           padding: 10px
         }
         </style>
-        <h1>Lista de usuários</h1>
+        <h1>Lista eventos</h1>
       <table border="1">`;
 
       let servicos: Events[] = await Events.find({
@@ -73,6 +74,83 @@ export class ExportController {
       let today = new Date(Date.now());
       let data = today.toLocaleString(); // "30/1/2022"
       html += `<div>Gerado por: Juca às ${data}</div>`;
+
+    }
+    return res.status(200).json({ message: "PDF enviado" })
+  }
+
+  async sendPdfPresence(req: Request, res: Response) {
+    let body = req.body;
+    let html: string = '';
+
+    let client: Clients | any = Clients.findOneBy({ id: body.clientId })
+    let dataStart = body.dataStart;
+    let dataEnd = body.dataEnd;
+    let type: any = body.type;
+    let id = body.id;
+
+    if (!client) {
+      return res.status(400).json({ message: "Cliente não encontrado" })
+    }
+
+    if (type = typeof Events) {
+      let event = Events.findOneBy({ id: id });
+      if (!event) {
+        return res.status(404).json({ mensagem: "Evento não encontrado" });
+      }
+      type = event;
+
+
+      html = `<style>
+        *{
+          font-family: "Arial";
+        }
+        table{
+          width:100%;
+          text-align: left;
+          border-collapse: collapse;
+          margin-bottom: 10px;
+        }
+        table td{
+          padding: 10px
+        }
+        table th{
+          padding: 10px
+        }
+        </style>
+        <h1>Comprovante de presença no evento:</h1>
+      <table border="1">`;
+
+      let servicos: Events[] = await Events.find({
+
+        where: {
+          clientsPresence: client
+        }
+      });
+      html += `<tr>
+      <th>Id</th>
+      <th>Usuário</th>
+      <th>Nome</th>
+      <th>Descrição</th>
+      <th>Endereço</th>
+      <th>Data de entrada</th>
+      <th>Data de saida</th>
+      <th>Situação<th></tr>`;
+      servicos.forEach((element) => {
+        html += `<tr>
+        <td>${element.id}</td>
+        <td>${element.user}</td>
+        <td>${element.name}</td>
+        <td>${element.description}</td>
+        <td>${element.address}</td>
+        <td>${element.startDate}</td>
+        <td>${element.endDate}</td>
+        <td>${element.situation}</td></tr>\r`;
+      });
+      html += "</table>";
+      let today = new Date(Date.now());
+      let data = today.toLocaleString(); // "30/1/2022"
+      html += `<div>Gerado por: ${client.name} às ${data}</div>`;
 
     }
     return res.status(200).json({ message: "PDF enviado" })

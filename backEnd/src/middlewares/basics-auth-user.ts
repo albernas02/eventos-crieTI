@@ -3,7 +3,7 @@ import { Users } from "../models/Users";
 import bcrypt from "bcrypt";
 
 
-export async function basicAuth(
+export async function basicAuthUser(
     req: Request,
     res: Response,
     next: NextFunction

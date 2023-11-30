@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Users } from "./Users";
 import { Clients } from "./Clients";
 
@@ -7,7 +7,7 @@ import { Clients } from "./Clients";
 export class Events extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
-    
+
     @Column()
     type: string;
 
@@ -20,11 +20,10 @@ export class Events extends BaseEntity {
     @Column()
     description: string;
 
-    @Column()
+    @Column({ type: "timestamp" })
     startDate: Date;
 
-
-    @Column()
+    @Column({ type: "timestamp" })
     endDate: Date;
 
     @Column()
@@ -34,7 +33,11 @@ export class Events extends BaseEntity {
     @JoinColumn({ name: "user_id" })
     user: Users;
 
-    @ManyToMany(() => Clients, clients => clients.events)
-    @JoinColumn({ name: "clients_id" })
+    @ManyToMany(() => Clients)
+    @JoinTable()
     clients: Clients[];
+
+    @ManyToMany(() => Clients)
+    @JoinTable()
+    clientsPresence: Clients[];
 }

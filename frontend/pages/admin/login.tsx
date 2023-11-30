@@ -1,17 +1,17 @@
 "use client";
-import { useForm } from 'react-hook-form'
+import { useForm } from "react-hook-form";
 import {
-    Flex,
-    Box,
-    FormControl,
-    FormLabel,
-    Input,
-    Checkbox,
-    Stack,
-    Button,
-    Heading,
-    Text,
-    useColorModeValue,
+  Flex,
+  Box,
+  FormControl,
+  FormLabel,
+  Input,
+  Checkbox,
+  Stack,
+  Button,
+  Heading,
+  Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import Link from "next/link";
 import { useContext, useEffect, useState } from 'react';
@@ -22,8 +22,8 @@ import { AuthContext } from '@/contexts/AuthContext';
 import { destroyCookie, setCookie } from 'nookies';
 
 export default function Login() {
-    const { register, handleSubmit } = useForm();
-    const [loading, setLoading] = useState(false);
+  const { register, handleSubmit } = useForm();
+  const [loading, setLoading] = useState(false);
 
     const { login } = useContext(AuthContext);
 
@@ -37,15 +37,16 @@ export default function Login() {
         });
     }, []);
 
-    async function onSubmit({email, password}: any) {
-        setLoading(true);
-        await login(email, password, '/loginUsers');
-        setLoading(false);
-    }
+  async function onSubmit({ email, password }: any) {
+    setLoading(true);
+    console.log(email, password);
+    await login(email, password, "/loginUsers");
+    setLoading(false);
+  }
 
-    // async function login(values) {
-    //     console.log(values)
-    //     setLoading(true);
+  // async function login(values) {
+  //     console.log(values)
+  //     setLoading(true);
 
     //     setTimeout(() => {
     //         setLoading(false)

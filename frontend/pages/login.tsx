@@ -1,17 +1,17 @@
 "use client";
-import { useForm } from 'react-hook-form'
+import { useForm } from "react-hook-form";
 import {
-    Flex,
-    Box,
-    FormControl,
-    FormLabel,
-    Input,
-    Checkbox,
-    Stack,
-    Button,
-    Heading,
-    Text,
-    useColorModeValue,
+  Flex,
+  Box,
+  FormControl,
+  FormLabel,
+  Input,
+  Checkbox,
+  Stack,
+  Button,
+  Heading,
+  Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import Link from "next/link";
 import { useContext, useEffect, useState } from 'react';
@@ -22,10 +22,10 @@ import { AuthContext } from '@/contexts/AuthContext';
 import { destroyCookie, setCookie } from 'nookies';
 
 export default function Login() {
-    const { register, handleSubmit } = useForm();
-    const [loading, setLoading] = useState(false);
+  const { register, handleSubmit } = useForm();
+  const [loading, setLoading] = useState(false);
 
-    const { login, token } = useContext(AuthContext);
+  const { login, token } = useContext(AuthContext);
 
     // If there already is a token, redirect to dashboard
     useEffect(() => {
@@ -37,15 +37,17 @@ export default function Login() {
         });
     }, []);
 
-    async function onSubmit({email, password}: any) {
-        setLoading(true);
-        await login(email, password, '/loginClients');
-        setLoading(false);
-    }
+  async function onSubmit({ email, password }: any) {
+    setLoading(true);
+    console.log(email, password);
 
-    // async function login(values) {
-    //     console.log(values)
-    //     setLoading(true);
+    await login(email, password, "/loginClients");
+    setLoading(false);
+  }
+
+  // async function login(values) {
+  //     console.log(values)
+  //     setLoading(true);
 
     //     setTimeout(() => {
     //         setLoading(false)
@@ -89,13 +91,17 @@ export default function Login() {
                                     Acessar
                                 </Button>
 
-                                <Flex gap={1} justify={"center"}>Não tem uma conta? <Link href="/registro"><Text color="purple.400">Registre-se</Text></Link></Flex>
-
-                            </Stack>
-                        </Stack>
-                    </form>
-                </Box>
+                <Flex gap={1} justify={"center"}>
+                  Não tem uma conta?{" "}
+                  <Link href="/registro">
+                    <Text color="purple.400">Registre-se</Text>
+                  </Link>
+                </Flex>
+              </Stack>
             </Stack>
-        </Flex>
-    );
+          </form>
+        </Box>
+      </Stack>
+    </Flex>
+  );
 }

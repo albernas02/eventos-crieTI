@@ -1,6 +1,7 @@
 import express, { Express, NextFunction, Request, Response } from "express";
 import cors from "cors";
-import { basicAuth } from "./middlewares/basics-auth-user";
+import { basicAuthClient } from "./middlewares/basics-auth-client";
+import { basicAuthUser } from "./middlewares/basics-auth-user";
 import usersRoutes from './routes/users'
 import clientsRoutes from './routes/clients'
 import eventsRoutes from './routes/events'
