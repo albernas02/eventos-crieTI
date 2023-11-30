@@ -1,96 +1,103 @@
 "use client";
-import { useForm } from 'react-hook-form'
+import { useForm } from "react-hook-form";
 import {
-    Flex,
-    Box,
-    FormControl,
-    FormLabel,
-    Input,
-    Checkbox,
-    Stack,
-    Button,
-    Heading,
-    Text,
-    useColorModeValue,
+  Flex,
+  Box,
+  FormControl,
+  FormLabel,
+  Input,
+  Checkbox,
+  Stack,
+  Button,
+  Heading,
+  Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import { useContext, useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
-import PasswordInput from '@/components/UI/PasswordInput';
-import Router from 'next/router';
-import { AuthContext } from '@/contexts/AuthContext';
-import { destroyCookie } from 'nookies';
+import { useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import PasswordInput from "@/components/UI/PasswordInput";
+import Router from "next/router";
+import { AuthContext } from "@/contexts/AuthContext";
+import { destroyCookie } from "nookies";
 
 export default function Login() {
-    const { register, handleSubmit } = useForm();
-    const [loading, setLoading] = useState(false);
+  const { register, handleSubmit } = useForm();
+  const [loading, setLoading] = useState(false);
 
-    const { login, token } = useContext(AuthContext);
+  const { login, token } = useContext(AuthContext);
 
-    // If there already is a token, redirect to dashboard
-    useEffect(() => {
-        destroyCookie(undefined, 'token')
-    }, []);
+  // If there already is a token, redirect to dashboard
+  useEffect(() => {
+    destroyCookie(undefined, "token");
+  }, []);
 
-    async function onSubmit({email, password}: any) {
-        setLoading(true);
-        await login(email, password, '/loginClients');
-        setLoading(false);
-    }
+  async function onSubmit({ email, password }: any) {
+    setLoading(true);
+    console.log(email, password);
 
-    // async function login(values) {
-    //     console.log(values)
-    //     setLoading(true);
+    await login(email, password, "/loginClients");
+    setLoading(false);
+  }
 
-    //     setTimeout(() => {
-    //         setLoading(false)
-    //         toast.success("Bem-vindo")
-    //         Router.push("/dashboard")
-    //     }, 2000)
-    // }
-    return (
-        <Flex
-            minH={"100vh"}
-            align={"center"}
-            justify={"center"}
-            bg={useColorModeValue("gray.50", "gray.800")}
+  // async function login(values) {
+  //     console.log(values)
+  //     setLoading(true);
+
+  //     setTimeout(() => {
+  //         setLoading(false)
+  //         toast.success("Bem-vindo")
+  //         Router.push("/dashboard")
+  //     }, 2000)
+  // }
+  return (
+    <Flex
+      minH={"100vh"}
+      align={"center"}
+      justify={"center"}
+      bg={useColorModeValue("gray.50", "gray.800")}
+    >
+      <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
+        <Stack align={"center"}>
+          <Heading fontSize={"4xl"}>Faça seu login</Heading>
+        </Stack>
+        <Box
+          rounded={"lg"}
+          bg={useColorModeValue("white", "gray.700")}
+          boxShadow={"lg"}
+          p={8}
         >
-            <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
-                <Stack align={"center"}>
-                    <Heading fontSize={"4xl"}>Faça seu login</Heading>
-                </Stack>
-                <Box
-                    rounded={"lg"}
-                    bg={useColorModeValue("white", "gray.700")}
-                    boxShadow={"lg"}
-                    p={8}
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Stack spacing={4}>
+              <FormControl id="email" isRequired>
+                <FormLabel>Email</FormLabel>
+                <Input type="email" {...register("email")} />
+              </FormControl>
+              <FormControl id="password" isRequired>
+                <FormLabel>Senha</FormLabel>
+                <Input type="password" {...register("password")} />
+              </FormControl>
+              <Stack spacing={4}>
+                <Button
+                  type="submit"
+                  colorScheme="purple"
+                  loadingText="Autenticando..."
+                  isLoading={loading}
                 >
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <Stack spacing={4}>
-                            <FormControl id="email" isRequired>
-                                <FormLabel>Email</FormLabel>
-                                <Input type="email" {...register('email')} />
-                            </FormControl>
-                            <FormControl id="password" isRequired>
-                                <FormLabel>Senha</FormLabel>
-                                <PasswordInput {...register('password')} />
-                            </FormControl>
-                            <Stack spacing={4}>
-                                <Button type='submit'
-                                    colorScheme="purple"
-                                    loadingText='Autenticando...'
-                                    isLoading={loading}
-                                >
-                                    Acessar
-                                </Button>
+                  Acessar
+                </Button>
 
-                                <Flex gap={1} justify={"center"}>Não tem uma conta? <Link href="/registro"><Text color="purple.400">Registre-se</Text></Link></Flex>
-
-                            </Stack>
-                        </Stack>
-                    </form>
-                </Box>
+                <Flex gap={1} justify={"center"}>
+                  Não tem uma conta?{" "}
+                  <Link href="/registro">
+                    <Text color="purple.400">Registre-se</Text>
+                  </Link>
+                </Flex>
+              </Stack>
             </Stack>
-        </Flex>
-    );
+          </form>
+        </Box>
+      </Stack>
+    </Flex>
+  );
 }
