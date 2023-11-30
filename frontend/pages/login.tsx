@@ -20,6 +20,7 @@ import PasswordInput from '@/components/UI/PasswordInput';
 import Router from 'next/router';
 import { AuthContext } from '@/contexts/AuthContext';
 import { destroyCookie, setCookie } from 'nookies';
+import Image from "next/image";
 
 export default function Login() {
   const { register, handleSubmit } = useForm();
@@ -27,15 +28,15 @@ export default function Login() {
 
   const { login } = useContext(AuthContext);
 
-    // If there already is a token, redirect to dashboard
-    useEffect(() => {
-        destroyCookie(undefined, 'token')
+  // If there already is a token, redirect to dashboard
+  useEffect(() => {
+    destroyCookie(undefined, 'token')
 
-        setCookie(undefined, 'auth_type', "clients", {
-            maxAge: 60 * 60 * 24 * 7, // 7 dias
-            path: "/"
-        });
-    }, []);
+    setCookie(undefined, 'auth_type', "clients", {
+      maxAge: 60 * 60 * 24 * 7, // 7 dias
+      path: "/"
+    });
+  }, []);
 
   async function onSubmit({ email, password }: any) {
     setLoading(true);
@@ -49,48 +50,51 @@ export default function Login() {
   //     console.log(values)
   //     setLoading(true);
 
-    //     setTimeout(() => {
-    //         setLoading(false)
-    //         toast.success("Bem-vindo")
-    //         Router.push("/dashboard")
-    //     }, 2000)
-    // }
-    return (
-        <Flex
-            minH={"100vh"}
-            align={"center"}
-            justify={"center"}
-            bg={useColorModeValue("gray.50", "gray.800")}
-            id="content-container"
+  //     setTimeout(() => {
+  //         setLoading(false)
+  //         toast.success("Bem-vindo")
+  //         Router.push("/dashboard")
+  //     }, 2000)
+  // }
+  return (
+    <Flex
+      minH={"100vh"}
+      align={"center"}
+      justify={"center"}
+      bg={useColorModeValue("gray.50", "gray.800")}
+      id="content-container"
+    >
+      <Stack spacing={3} mx={"auto"} maxW={"lg"} py={12} px={6}>
+        <Stack align={"center"}>
+          <Flex gap="3" align="center">
+            <Image src="/imagens/92969c3c-5d00-4121-a391-1c3d06d2f072.png" height="50" width="70" alt='logo' />
+              <Heading display="flex" gap="2" fontSize={"2xl"}>Crie<Text color="purple.500">Eventos</Text></Heading>
+          </Flex>
+        </Stack>
+        <Box
+          rounded={"lg"}
+          bg={useColorModeValue("white", "gray.700")}
+          boxShadow={"lg"}
+          p={8}
         >
-            <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
-                <Stack align={"center"}>
-                    <Heading fontSize={"2xl"}>Faça seu login</Heading>
-                </Stack>
-                <Box
-                    rounded={"lg"}
-                    bg={useColorModeValue("white", "gray.700")}
-                    boxShadow={"lg"}
-                    p={8}
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Stack spacing={4}>
+              <FormControl id="email" isRequired>
+                <FormLabel>Email</FormLabel>
+                <Input type="email" {...register('email')} />
+              </FormControl>
+              <FormControl id="password" isRequired>
+                <FormLabel>Senha</FormLabel>
+                <PasswordInput register={register} name="password" />
+              </FormControl>
+              <Stack spacing={4}>
+                <Button type='submit'
+                  colorScheme="purple"
+                  loadingText='Autenticando...'
+                  isLoading={loading}
                 >
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <Stack spacing={4}>
-                            <FormControl id="email" isRequired>
-                                <FormLabel>Email</FormLabel>
-                                <Input type="email" {...register('email')} />
-                            </FormControl>
-                            <FormControl id="password" isRequired>
-                                <FormLabel>Senha</FormLabel>
-                                <PasswordInput register={register} name="password" />
-                            </FormControl>
-                            <Stack spacing={4}>
-                                <Button type='submit'
-                                    colorScheme="purple"
-                                    loadingText='Autenticando...'
-                                    isLoading={loading}
-                                >
-                                    Acessar
-                                </Button>
+                  Acessar
+                </Button>
 
                 <Flex gap={1} justify={"center"}>
                   Não tem uma conta?{" "}
@@ -103,6 +107,6 @@ export default function Login() {
           </form>
         </Box>
       </Stack>
-    </Flex>
+    </Flex >
   );
 }

@@ -40,6 +40,7 @@ import toast from "react-hot-toast";
 import moment from "moment";
 import { GetServerSideProps } from "next";
 import { checkUserAuth } from "@/Utils/pageAuthCheck";
+import Link from "next/link";
 
 interface IEvento {
     id?: number;
@@ -77,6 +78,8 @@ export default function Eventos() {
             <Flex mb={"4"} alignItems={"center"} justifyContent={"space-between"}>
                 <Heading size={"md"}>Eventos</Heading>
                 <Flex gap="2">
+
+                    <Link href="http://127.0.0.1:3000/csv" download target="_blank">
                     <Button
                         size={"sm"}
                         leftIcon={<PiFileCsvLight />}
@@ -85,6 +88,9 @@ export default function Eventos() {
                     >
                         CSV
                     </Button>
+                    </Link>
+
+                    <Link href="http://127.0.0.1:3000/pdf" download target="_blank">
                     <Button
                         size={"sm"}
                         leftIcon={<PiFilePdfLight />}
@@ -93,6 +99,7 @@ export default function Eventos() {
                     >
                         PDV
                     </Button>
+                    </Link>
                     <CadastroEventos />
                 </Flex>
             </Flex>

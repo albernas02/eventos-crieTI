@@ -45,18 +45,6 @@ export class EventsControllers {
     async create(req: Request, res: Response): Promise<Response> {
         let body = req.body;
 
-        let startDate = body.startDate;
-        let endDate = body.endDate;
-
-        let parts = startDate.split('/');
-        startDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
-
-        parts = endDate.split('/');
-        endDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
-
-        startDate = new Date(startDate)
-        endDate = new Date(endDate)
-
         // let user: Users | any = localStorage.getItem('user');
         let user: Users | null = await Users.findOneBy({ id: body.user })
 
@@ -69,8 +57,8 @@ export class EventsControllers {
             type: body.type,
             address: body.address,
             description: body.description,
-            startDate: startDate,
-            endDate: endDate,
+            startDate: body.startDate,
+            endDate: body.endDate,
             situation: 'A',
             user: user,
         }).save();
@@ -81,18 +69,6 @@ export class EventsControllers {
     async update(req: Request, res: Response): Promise<Response> {
         let body = req.body;
         let event: Events = res.locals.event;
-
-        let startDate = body.startDate;
-        let endDate = body.endDate;
-
-        let parts = startDate.split('/');
-        startDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
-
-        parts = endDate.split('/');
-        endDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
-
-        startDate = new Date(startDate)
-        endDate = new Date(endDate)
 
         let user: Users | null = await Users.findOneBy({ id: body.user })
         // let user: Users | any = localStorage.getItem('user');
@@ -105,8 +81,8 @@ export class EventsControllers {
         event.type = body.type;
         event.address = body.address;
         event.description = body.description;
-        event.startDate = startDate;
-        event.endDate = endDate;
+        event.startDate = body.startDate;
+        event.endDate = body.endDate;
         event.user = user;
 
         await event.save();

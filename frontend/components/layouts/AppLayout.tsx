@@ -36,12 +36,13 @@ import { IconType } from 'react-icons'
 import { Children } from 'react'
 import { TbCalendar } from "react-icons/tb";
 import { IoTicketOutline } from "react-icons/io5";
-import { HiOutlineUsers } from "react-icons/hi2";
+import { HiOutlineCalendar, HiOutlineCalendarDays, HiOutlineUsers } from "react-icons/hi2";
 import { Image } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { parseCookies } from 'nookies'
 import NextNProgress from "nextjs-progressbar";
+
 
 interface LinkItemProps {
     name: string
@@ -67,8 +68,8 @@ interface SidebarProps extends BoxProps {
 
 const LinkItems: Array<LinkItemProps> = [
     { name: 'Home', icon: FiHome, href: "/" },
-    { name: 'Eventos', icon: TbCalendar, href: "/admin/eventos", permission: "clients" },
-    { name: 'Gerenciar Eventos', icon: TbCalendar, href: "/admin/eventos", permission: "users" },
+    { name: 'Eventos', icon: HiOutlineCalendarDays, href: "/eventos" },
+    { name: 'Gerenciar Eventos', icon: HiOutlineCalendarDays, href: "/admin/eventos", permission: "users" },
     { name: 'Inscrições', icon: IoTicketOutline, href: "/incricoes", permission: "clients" },
     { name: 'Gerenciar Usuários', icon: HiOutlineUsers, href: "/admin/usuarios", permission: "users" },
 ]

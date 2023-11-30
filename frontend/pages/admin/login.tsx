@@ -1,17 +1,17 @@
 "use client";
 import { useForm } from "react-hook-form";
 import {
-  Flex,
-  Box,
-  FormControl,
-  FormLabel,
-  Input,
-  Checkbox,
-  Stack,
-  Button,
-  Heading,
-  Text,
-  useColorModeValue,
+    Flex,
+    Box,
+    FormControl,
+    FormLabel,
+    Input,
+    Checkbox,
+    Stack,
+    Button,
+    Heading,
+    Text,
+    useColorModeValue,
 } from "@chakra-ui/react";
 import Link from "next/link";
 import { useContext, useEffect, useState } from 'react';
@@ -20,10 +20,11 @@ import PasswordInput from '@/components/UI/PasswordInput';
 import Router from 'next/router';
 import { AuthContext } from '@/contexts/AuthContext';
 import { destroyCookie, setCookie } from 'nookies';
+import Image from "next/image";
 
 export default function Login() {
-  const { register, handleSubmit } = useForm();
-  const [loading, setLoading] = useState(false);
+    const { register, handleSubmit } = useForm();
+    const [loading, setLoading] = useState(false);
 
     const { login } = useContext(AuthContext);
 
@@ -37,16 +38,16 @@ export default function Login() {
         });
     }, []);
 
-  async function onSubmit({ email, password }: any) {
-    setLoading(true);
-    console.log(email, password);
-    await login(email, password, "/loginUsers");
-    setLoading(false);
-  }
+    async function onSubmit({ email, password }: any) {
+        setLoading(true);
+        console.log(email, password);
+        await login(email, password, "/loginUsers");
+        setLoading(false);
+    }
 
-  // async function login(values) {
-  //     console.log(values)
-  //     setLoading(true);
+    // async function login(values) {
+    //     console.log(values)
+    //     setLoading(true);
 
     //     setTimeout(() => {
     //         setLoading(false)
@@ -62,9 +63,12 @@ export default function Login() {
             bg={useColorModeValue("gray.50", "gray.800")}
             id="content-container"
         >
-            <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
+            <Stack spacing={3} mx={"auto"} maxW={"lg"} py={12} px={6}>
                 <Stack align={"center"}>
-                    <Heading fontSize={"2xl"}>Área Administrativa</Heading>
+                    <Flex gap="3" align="center">
+                        <Image src="/imagens/92969c3c-5d00-4121-a391-1c3d06d2f072.png" height="50" width="70" alt='logo' />
+                        <Heading fontSize={"2xl"}>Área Administrativa</Heading>
+                    </Flex>
                 </Stack>
                 <Box
                     rounded={"lg"}

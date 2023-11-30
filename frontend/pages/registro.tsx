@@ -19,6 +19,7 @@ import toast from "react-hot-toast";
 import PasswordInput from "@/components/UI/PasswordInput";
 import { apiClient } from "@/services/api";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function Registro() {
   const { register, handleSubmit } = useForm();
@@ -54,7 +55,10 @@ export default function Registro() {
     >
       <Stack spacing={8} mx={"auto"} maxW={"lg"} minW={"md"} py={12} px={6}>
         <Stack align={"center"}>
-          <Heading fontSize={"4xl"}>Crie sua conta</Heading>
+          <Flex gap="3" align="center">
+            <Image src="/imagens/92969c3c-5d00-4121-a391-1c3d06d2f072.png" height="50" width="70" alt='logo' />
+            <Heading fontSize={"3xl"}>Crie sua conta</Heading>
+          </Flex>
         </Stack>
         <Box
           rounded={"lg"}
@@ -65,7 +69,7 @@ export default function Registro() {
           <form onSubmit={handleSubmit(registro)}>
             <Stack spacing={4}>
               <FormControl id="name" isRequired>
-                <FormLabel>Nome</FormLabel>
+                <FormLabel>Nome Completo</FormLabel>
                 <Input type="text" {...register("name")} />
               </FormControl>
               <FormControl id="phone" isRequired>
