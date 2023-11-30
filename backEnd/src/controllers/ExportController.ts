@@ -54,7 +54,9 @@ export class ExportController {
       <th>Id</th>
       <th>Usuário</th>
       <th>Nome</th>
+      <th>Tipo</th>
       <th>Descrição</th>
+      <th>Preço</th>
       <th>Endereço</th>
       <th>Data de entrada</th>
       <th>Data de saida</th>
@@ -64,7 +66,9 @@ export class ExportController {
         <td>${element.id}</td>
         <td>${element.user}</td>
         <td>${element.name}</td>
+        <td>${element.type}</td>
         <td>${element.description}</td>
+        <td>${element.price}</td>
         <td>${element.address}</td>
         <td>${element.startDate}</td>
         <td>${element.endDate}</td>
@@ -172,19 +176,19 @@ export class ExportController {
   async listCsv(req: Request, res: Response): Promise<Response> {
     let name = req.query.name;
 
-    let users: Events[] = await Events.findBy({
+    let event: Events[] = await Events.findBy({
       name: name ? ILike(`${name}`) : undefined,
     });
 
     let header = '"ID";"nome";"Email"\n';
     let csv = header;
 
-    users.forEach((element) => {
+    event.forEach((element) => {
       csv += `"${element.id}";"${element.name}";"${element.startDate}";"${element.endDate}"\r`;
     });
 
     res.append("Content-Type", "text/csv");
-    res.attachment("usuarios.csv");
+    res.attachment("eventos.csv");
     return res.status(200).send(csv);
   }
 

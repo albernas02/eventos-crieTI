@@ -20,6 +20,9 @@ export class Events extends BaseEntity {
     @Column()
     description: string;
 
+    @Column()
+    price: string;
+
     @Column({ type: "timestamp" })
     startDate: Date;
 

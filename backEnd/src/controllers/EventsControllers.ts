@@ -45,7 +45,20 @@ export class EventsControllers {
     async create(req: Request, res: Response): Promise<Response> {
         let body = req.body;
 
+        let startDate = body.startDate;
+        let endDate = body.endDate;
+
+        // let parts = startDate.split('/');
+        // startDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
+        // 
+        // parts = endDate.split('/');
+        // endDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
+        // 
+        // startDate = new Date(startDate)
+        // endDate = new Date(endDate)
+
         // let user: Users | any = localStorage.getItem('user');
+        console.log('hello')
         let user: Users | null = await Users.findOneBy({ id: body.user })
 
         if (!user) {
@@ -57,8 +70,9 @@ export class EventsControllers {
             type: body.type,
             address: body.address,
             description: body.description,
-            startDate: body.startDate,
-            endDate: body.endDate,
+            price: body.price,
+            startDate: startDate,
+            endDate: endDate,
             situation: 'A',
             user: user,
         }).save();
@@ -70,8 +84,10 @@ export class EventsControllers {
         let body = req.body;
         let event: Events = res.locals.event;
 
+        let startDate = body.startDate;
+        let endDate = body.endDate;
+
         let user: Users | null = await Users.findOneBy({ id: body.user })
-        // let user: Users | any = localStorage.getItem('user');
 
         if (!user) {
             return res.status(400).json({ message: "Usúario não encontrado" })
@@ -80,9 +96,10 @@ export class EventsControllers {
         event.name = body.name;
         event.type = body.type;
         event.address = body.address;
+        event.price = body.price;
         event.description = body.description;
-        event.startDate = body.startDate;
-        event.endDate = body.endDate;
+        event.startDate = startDate;
+        event.endDate = endDate;
         event.user = user;
 
         await event.save();
@@ -90,7 +107,7 @@ export class EventsControllers {
         return res.status(200).json(event);
     }
 
-    async checkIn(req: Request, res: Response): Promise<Response> {
+    async buy(req: Request, res: Response): Promise<Response> {
         try {
             let body = req.body;
             let eventId = res.locals.event;
@@ -157,8 +174,8 @@ export class EventsControllers {
             return res.status(500).json({ message: "Erro interno do servidor" });
         }
     }
-    
-    async confirmationPresence(req: Request, res: Response): Promise<Response> {
+
+    async checkIn(req: Request, res: Response): Promise<Response> {
         let body = req.body;
         let eventId = res.locals.event;
         let clientId = body.clientId;

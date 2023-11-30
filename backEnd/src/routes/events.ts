@@ -11,8 +11,9 @@ async function validarPayload(req: Request, res: Response, next: NextFunction): 
     let schema = yup.object({
         name: yup.string().min(3).max(255).required(),
         type: yup.string().min(3).max(255).required(),
-        address: yup.string().min(3).max(255).required(),
         description: yup.string().max(255).required(),
+        price: yup.string().min(3).max(255).required(),
+        address: yup.string().min(3).max(255).required(),
         startDate: yup.string().required(),
         endDate: yup.string().required(),
         user: yup.number().min(1).required(),
@@ -53,7 +54,8 @@ rotas.get("/events", controller.listAll);
 rotas.get("/events/:id", validar, controller.find);
 rotas.post("/events", validarPayload, controller.create);
 rotas.post("/checkIn/:id", controller.checkIn);
-rotas.post("/checkOut/:id",controller.checkOut);
+rotas.post("/buy/:id", controller.buy);
+rotas.post("/checkOut/:id", controller.checkOut);
 rotas.put("/events/:id", validar, validarPayload, controller.update);
 rotas.delete("/events/:id", validar, controller.delete);
 // rotas.get("/userscsv",controller.gerarCSVusers);
