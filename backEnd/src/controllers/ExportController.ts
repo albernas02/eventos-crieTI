@@ -80,7 +80,7 @@ export class ExportController {
     res.setHeader('Content-Disposition', 'attachment; filename=seu_arquivo.pdf');
     res.send(pdf);
 
-    return res.status(200)
+    return res.status(200).json(pdf)
   }
 
   async sendPdfPresence(req: Request, res: Response) {
