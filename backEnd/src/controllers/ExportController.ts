@@ -43,13 +43,7 @@ export class ExportController {
         <h1>Lista eventos</h1>
       <table border="1">`;
 
-      let servicos: Events[] = await Events.find({
-
-        where: {
-          startDate: Between(dataStart, dataEnd),
-          endDate: Between(dataStart, dataEnd)
-        }
-      });
+      let events: Events[] = await Events.find();
       html += `<tr>
       <th>Id</th>
       <th>Usuário</th>
@@ -61,7 +55,7 @@ export class ExportController {
       <th>Data de entrada</th>
       <th>Data de saida</th>
       <th>Situação<th></tr>`;
-      servicos.forEach((element) => {
+      events.forEach((element) => {
         html += `<tr>
         <td>${element.id}</td>
         <td>${element.user}</td>
@@ -80,7 +74,13 @@ export class ExportController {
       html += `<div>Gerado por: Juca às ${data}</div>`;
 
     }
-    return res.status(200).json({ message: "PDF enviado" })
+    let pdf = await ExportController.pdf(html);
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename=seu_arquivo.pdf');
+    res.send(pdf);
+
+    return res.status(200)
   }
 
   async sendPdfPresence(req: Request, res: Response) {
@@ -160,19 +160,18 @@ export class ExportController {
     return res.status(200).json({ message: "PDF enviado" })
   }
 
-  static async pdf(html: string) {
+  static async pdf(html: string): Promise<Buffer> {
     const browser = await puppeteer.launch({ headless: "new" });
     const page = await browser.newPage();
     await page.setViewport({ width: 1366, height: 768 });
     await page.setContent(html);
-
+    console.log("hello")
     const pdfBuffer = await page.pdf();
     await page.close();
     await browser.close();
 
     return pdfBuffer;
   }
-
   async listCsv(req: Request, res: Response): Promise<Response> {
     let name = req.query.name;
 
@@ -180,11 +179,11 @@ export class ExportController {
       name: name ? ILike(`${name}`) : undefined,
     });
 
-    let header = '"ID";"nome";"Email"\n';
+    let header = '"ID";"nome";"Descrição";"Preço";"Endereço";"Inicio";"Fim";"Categoria";"Status"\n';
     let csv = header;
 
     event.forEach((element) => {
-      csv += `"${element.id}";"${element.name}";"${element.startDate}";"${element.endDate}"\r`;
+      csv += `"${element.id}";"${element.description}";"${element.name}";"${element.price}";"${element.address}";"${element.startDate}";"${element.endDate};"${element.type}";"${element.situation}""\r`;
     });
 
     res.append("Content-Type", "text/csv");
