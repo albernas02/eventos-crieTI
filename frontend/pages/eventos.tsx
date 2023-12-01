@@ -56,7 +56,7 @@ export default function Eventos() {
                             inscrito={true}
                             nome={evento.name}
                             momento={moment(evento.startDate).format('llll')}
-                            valor={evento.price}
+                            valor={evento.price.replace(",", ".")}
                             endereco={evento.address}
                             tipo={evento.type}
                             descricao={evento.description}
