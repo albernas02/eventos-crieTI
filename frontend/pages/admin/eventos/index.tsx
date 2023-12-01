@@ -46,6 +46,7 @@ interface IEvento {
     id?: number;
     name: string;
     description: string;
+    price: string;
     address: string;
     startDate: Date;
     endDate: Date;
@@ -109,6 +110,7 @@ export default function Eventos() {
                         <Tr>
                             <Th>Evento</Th>
                             <Th>Descrição</Th>
+                            <Th>Valor</Th>
                             <Th>Endereço</Th>
                             <Th>Início</Th>
                             <Th>Fim</Th>
@@ -122,6 +124,7 @@ export default function Eventos() {
                             dados?.map(evento => <Tr>
                                 <Td>{evento.name}</Td>
                                 <Td>{evento.description}</Td>
+                                <Td>{evento.price}</Td>
                                 <Td>{evento.address}</Td>
                                 <Td>{moment(evento.startDate).format('llll')}</Td>
                                 <Td>{moment(evento.endDate).format('llll')}</Td>
@@ -149,6 +152,7 @@ export default function Eventos() {
             defaultValues: {
                 name: evento?.name,
                 description: evento?.description,
+                price: evento?.price,
                 address: evento?.address,
                 startDate: evento?.startDate,
                 endDate: evento?.endDate,
@@ -208,6 +212,11 @@ export default function Eventos() {
                                 <FormControl id="description" isRequired mt={4}>
                                     <FormLabel>Descrição</FormLabel>
                                     <Input {...register('description')} />
+                                </FormControl>
+
+                                <FormControl id="price" isRequired mt={4}>
+                                    <FormLabel>Preço</FormLabel>
+                                    <Input {...register('price')} />
                                 </FormControl>
 
                                 <FormControl id="address" isRequired mt={4}>

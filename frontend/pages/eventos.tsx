@@ -14,6 +14,7 @@ interface IEventoCard {
     id?: number;
     name: string;
     description: string;
+    price: string;
     address: string;
     startDate: Date;
     endDate: Date;
@@ -55,7 +56,7 @@ export default function Eventos() {
                             inscrito={true}
                             nome={evento.name}
                             momento={moment(evento.startDate).format('llll')}
-                            valor={100}
+                            valor={evento.price}
                             endereco={evento.address}
                             tipo={evento.type}
                             descricao={evento.description}
