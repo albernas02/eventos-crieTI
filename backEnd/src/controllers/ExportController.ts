@@ -10,21 +10,9 @@ export class ExportController {
   async downloadPdf(req: Request, res: Response) {
     let body = req.body;
     let html: string = '';
+    let name;
 
-    let dataStart = body.dataStart;
-    let dataEnd = body.dataEnd;
-    let type: any = body.type;
-    let id = body.id;
-
-    if (type = typeof Events) {
-      let event = Events.findOneBy({ id: id });
-      if (!event) {
-        return res.status(404).json({ mensagem: "Evento não encontrado" });
-      }
-      type = event;
-
-
-      html = `<style>
+    html = `<style>
         *{
           font-family: "Arial";
         }
@@ -44,8 +32,8 @@ export class ExportController {
         <h1>Lista eventos</h1>
       <table border="1">`;
 
-      let events: Events[] = await Events.find();
-      html += `<tr>
+    let events: Events[] = await Events.find();
+    html += `<tr>
       <th>Id</th>
       <th>Usuário</th>
       <th>Nome</th>
@@ -56,8 +44,9 @@ export class ExportController {
       <th>Data de entrada</th>
       <th>Data de saida</th>
       <th>Situação<th></tr>`;
-      events.forEach((element) => {
-        html += `<tr>
+    events.forEach((element) => {
+      name = element.name
+      html += `<tr>
         <td>${element.id}</td>
         <td>${element.user}</td>
         <td>${element.name}</td>
@@ -68,20 +57,19 @@ export class ExportController {
         <td>${element.startDate}</td>
         <td>${element.endDate}</td>
         <td>${element.situation}</td></tr>\r`;
-      });
-      html += "</table>";
-      let today = new Date(Date.now());
-      let data = today.toLocaleString(); // "30/1/2022"
-      html += `<div>Gerado por: Juca às ${data}</div>`;
+    });
+    html += "</table>";
+    let today = new Date(Date.now());
+    let data = today.toLocaleString(); // "30/1/2022"
+    html += `<div>Gerado por: ${name} às ${data}</div>`;
 
-    }
     let pdf = await ExportController.pdf(html);
 
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', 'attachment; filename=seu_arquivo.pdf');
     res.send(pdf);
 
-    return res.status(200).json(pdf)
+    return res.status(200)
   }
 
   async sendPdfPresence(req: Request, res: Response) {
@@ -146,24 +134,26 @@ export class ExportController {
     const page = await browser.newPage();
     await page.setViewport({ width: 1366, height: 768 });
     await page.setContent(html);
+
     const pdfBuffer = await page.pdf();
+
     await page.close();
     await browser.close();
 
     return pdfBuffer;
   }
+
   async listCsv(req: Request, res: Response): Promise<Response> {
     let name = req.query.name;
 
-    let event: Events[] = await Events.findBy({
-      name: name ? ILike(`${name}`) : undefined,
-    });
+    let events: Events[] = await Events.find();
 
     let header = '"ID";"nome";"Descrição";"Preço";"Endereço";"Inicio";"Fim";"Categoria";"Status"\n';
     let csv = header;
+    console.log(events.length)
 
-    event.forEach((element) => {
-      csv += `"${element.id}";"${element.description}";"${element.name}";"${element.price}";"${element.address}";"${element.startDate}";"${element.endDate};"${element.type}";"${element.situation}""\r`;
+    events.forEach((element) => {
+      csv += `"${element.id}";"${element.description}";"${element.name}";"${element.price}";"${element.address}";"${element.startDate}";"${element.endDate};"${element.type}";"${element.situation}"\r`;
     });
 
     res.append("Content-Type", "text/csv");
@@ -232,7 +222,7 @@ export class ExportController {
     let mailOptions = {
       from: "atur.albernas2002@outlook.com",
       to: client.email,
-      subject: "Bem vindo ao Crie_TI eventos",
+      subject: "Crie_TI eventos agradece a preferência",
       html: `Estamos muito felizes contar com você ${client.name} no evento ${event.name}!`,
     };
 
