@@ -4,6 +4,7 @@ import { Events } from "../models/Events";
 import * as nodemailer from "nodemailer";
 import * as puppeteer from "puppeteer";
 import { Clients } from "../models/Clients";
+import { Tickets } from "../models/Tickets";
 
 export class ExportController {
   async downloadPdf(req: Request, res: Response) {
@@ -84,28 +85,12 @@ export class ExportController {
   }
 
   async sendPdfPresence(req: Request, res: Response) {
-    let body = req.body;
     let html: string = '';
 
-    let client: Clients | any = Clients.findOneBy({ id: body.clientId })
-    let dataStart = body.dataStart;
-    let dataEnd = body.dataEnd;
-    let type: any = body.type;
-    let id = body.id;
+    let event: Events = res.locals.event;
+    let client: Clients = res.locals.client;
 
-    if (!client) {
-      return res.status(400).json({ message: "Cliente não encontrado" })
-    }
-
-    if (type = typeof Events) {
-      let event = Events.findOneBy({ id: id });
-      if (!event) {
-        return res.status(404).json({ mensagem: "Evento não encontrado" });
-      }
-      type = event;
-
-
-      html = `<style>
+    html = `<style>
         *{
           font-family: "Arial";
         }
@@ -122,39 +107,38 @@ export class ExportController {
           padding: 10px
         }
         </style>
-        <h1>Comprovante de presença no evento:</h1>
+        <h1>Lista eventos</h1>
       <table border="1">`;
 
-      let servicos: Events[] = await Events.find({
+    let tickets: Tickets[] = await Tickets.find();
 
-      });
-      html += `<tr>
+
+    html += `<tr>
       <th>Id</th>
-      <th>Usuário</th>
-      <th>Nome</th>
-      <th>Descrição</th>
-      <th>Endereço</th>
-      <th>Data de entrada</th>
-      <th>Data de saida</th>
-      <th>Situação<th></tr>`;
-      servicos.forEach((element) => {
-        html += `<tr>
-        <td>${element.id}</td>
-        <td>${element.user}</td>
-        <td>${element.name}</td>
-        <td>${element.description}</td>
-        <td>${element.address}</td>
-        <td>${element.startDate}</td>
-        <td>${element.endDate}</td>
-        <td>${element.situation}</td></tr>\r`;
-      });
-      html += "</table>";
-      let today = new Date(Date.now());
-      let data = today.toLocaleString(); // "30/1/2022"
-      html += `<div>Gerado por: ${client.name} às ${data}</div>`;
+      <th>Client</th>
+      <th>Evento</th>`;
 
+    for (let ticket of tickets) {
+      if (ticket.client.id == client.id && ticket.event.id == event.id && ticket.presence == true) {
+        let ok = "Esteve presente"
+        html += `<tr>
+        <td>${ticket.client.name}</td>
+        <td>${ticket.event.name}</td>
+        <td>${ok}</td>`;
+      }
     }
-    return res.status(200).json({ message: "PDF enviado" })
+    html += "</table>";
+    let today = new Date(Date.now());
+    let data = today.toLocaleString(); // "30/1/2022"
+    html += `<div>Gerado por: ${client.name} às ${data}</div>`;
+
+    let pdf = await ExportController.pdf(html);
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename=seu_arquivo.pdf');
+    res.send(pdf);
+
+    return res.status(200).json(pdf)
   }
 
   static async pdf(html: string): Promise<Buffer> {
@@ -162,7 +146,6 @@ export class ExportController {
     const page = await browser.newPage();
     await page.setViewport({ width: 1366, height: 768 });
     await page.setContent(html);
-    console.log("hello")
     const pdfBuffer = await page.pdf();
     await page.close();
     await browser.close();
@@ -195,21 +178,22 @@ export class ExportController {
       host: "smtp.office365.com",
       port: 587,
       secure: false,
+      requireTLS: true,
       tls: {
         rejectUnauthorized: false,
         ciphers: "SSLv3",
       },
       auth: {
-        user: "oficina.crieti@hotmail.com",
+        user: "atur.albernas2002@outlook.com",
         pass: process.env.PASS,
       },
     };
 
     let mailOptions = {
-      from: process.env.USER,
+      from: "atur.albernas2002@outlook.com",
       to: body.email,
       subject: "Bem vindo ao Crie_TI eventos",
-      html: `Estamo muito felizes em ter você conosco${body.name}!`,
+      html: `Estamos muito felizes em ter você conosco${body.name}!`,
     };
 
     let transporter = nodemailer.createTransport(emailConfig);
@@ -227,4 +211,43 @@ export class ExportController {
     return res.status(401);
   }
 
+  async sendEmailBuy(req: Request, res: Response): Promise<Response> {
+    let event: Events = res.locals.event;
+    let client: Clients = res.locals.client;
+
+    let emailConfig = {
+      host: "smtp.office365.com",
+      port: 587,
+      secure: false,
+      requireTLS: true,
+      auth: {
+        user: "atur.albernas2002@outlook.com",
+        pass: process.env.PASS,
+      },
+      tls: {
+        ciphers: "SSLv3",
+      },
+    };
+
+    let mailOptions = {
+      from: "atur.albernas2002@outlook.com",
+      to: client.email,
+      subject: "Bem vindo ao Crie_TI eventos",
+      html: `Estamos muito felizes contar com você ${client.name} no evento ${event.name}!`,
+    };
+
+    let transporter = nodemailer.createTransport(emailConfig);
+
+    transporter.sendMail(mailOptions, async function (error, info) {
+      if (error) {
+        console.log("Erro ao enviar email:" + error);
+        return res.status(401).send("Erro ao enviar email" + error);
+      } else {
+        console.log("Email enviado: " + info.response);
+        return res.status(200).send("Email enviado: " + info.response);
+      }
+    });
+
+    return res.status(401);
+  }
 }

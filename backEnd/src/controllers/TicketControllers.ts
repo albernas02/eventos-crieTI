@@ -2,6 +2,9 @@ import { Request, Response } from "express";
 import { Tickets } from "../models/Tickets";
 import { Events } from "../models/Events";
 import { Clients } from "../models/Clients";
+import { ExportController } from "../controllers/ExportController"
+
+let exportController: ExportController = new ExportController()
 
 
 export class TicketControllers {
@@ -24,8 +27,11 @@ export class TicketControllers {
             presence: false
         }).save();
 
+        await exportController.sendEmailBuy(req, res);
+        
         return res.status(200).json(ticket);
     }
+
     async listWithClient(req: Request, res: Response): Promise<Response> {
         let client: Clients = res.locals.client;
 
@@ -40,6 +46,7 @@ export class TicketControllers {
 
         return res.status(200).json(events);
     }
+
     async checkIn(req: Request, res: Response): Promise<Response> {
         let client = res.locals.client
         let event: Events = res.locals.event
@@ -68,6 +75,7 @@ export class TicketControllers {
                 await ticket.remove();
             }
         }
+        tickets = await Tickets.find()
 
         return res.status(200).json(tickets)
     }
