@@ -127,9 +127,6 @@ export class ExportController {
 
       let servicos: Events[] = await Events.find({
 
-        where: {
-          clientsPresence: client
-        }
       });
       html += `<tr>
       <th>Id</th>

@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { Events } from "../models/Events";
 import { Users } from "../models/Users";
-import { format } from "date-fns";
 import { Clients } from "../models/Clients";
 
 
@@ -106,102 +105,7 @@ export class EventsControllers {
 
         return res.status(200).json(event);
     }
-
-    async buy(req: Request, res: Response): Promise<Response> {
-        try {
-            let body = req.body;
-            let eventId = res.locals.event;
-            let clientId = body.clientId;
-
-            let event: Events | null = await Events.findOneBy({ id: eventId });
-            let client: Clients | null = await Clients.findOneBy({ id: clientId });
-
-            if (!event) {
-                return res.status(400).json({ message: "Evento não encontrado" });
-            }
-
-            if (!client) {
-                return res.status(400).json({ message: "Cliente não encontrado" });
-            }
-
-            if (!event.clients) {
-                event.clients = [];
-            }
-
-            event.clients.push(client);
-
-            await event.save();
-
-            return res.status(200).json(event);
-        } catch (error) {
-            console.error(error);
-            return res.status(500).json({ message: "Erro interno do servidor" });
-        }
-    }
-
-    async checkOut(req: Request, res: Response): Promise<Response> {
-        try {
-            let body = req.body;
-            let eventId = res.locals.event;
-            let clientId = body.clientId;
-
-            let event: Events | null = await Events.findOneBy({ id: eventId });
-            let client: Clients | null = await Clients.findOneBy({ id: clientId });
-
-            if (!event) {
-                return res.status(400).json({ message: "Evento não encontrado" });
-            }
-
-            if (!client) {
-                return res.status(400).json({ message: "Cliente não encontrado" });
-            }
-
-            if (!event.clients) {
-                event.clients = [];
-            }
-
-            let clientIndex = event.clients.findIndex((c) => c.id === clientId);
-
-            if (clientIndex !== -1) {
-                event.clients.splice(clientIndex, 1);
-            }
-
-            await event.save();
-
-            return res.status(200).json(event);
-        } catch (error) {
-            console.error(error);
-            return res.status(500).json({ message: "Erro interno do servidor" });
-        }
-    }
-
-    async checkIn(req: Request, res: Response): Promise<Response> {
-        let body = req.body;
-        let eventId = res.locals.event;
-        let clientId = body.clientId;
-
-        let event: Events | null = await Events.findOneBy({ id: eventId });
-        let client: Clients | null = await Clients.findOneBy({ id: clientId });
-
-        if (!event) {
-            return res.status(400).json({ message: "Evento não encontrado" });
-        }
-
-        if (!client) {
-            return res.status(400).json({ message: "Cliente não encontrado" });
-        }
-
-        if (!event.clientsPresence) {
-            event.clientsPresence = [];
-        }
-
-        event.clientsPresence.push(client);
-
-        await event.save();
-
-        return res.status(200).json(event);
-    }
-
+        
     async delete(req: Request, res: Response): Promise<Response> {
         let body = req.body;
 

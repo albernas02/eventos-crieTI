@@ -2,6 +2,7 @@
 import bcrypt from 'bcrypt';
 import { Request, Response } from "express";
 import { Clients } from "../models/Clients";
+import { Events } from '../models/Events';
 
 export class ClientsControllers {
     async listAll(req: Request, res: Response): Promise<Response> {
@@ -10,8 +11,6 @@ export class ClientsControllers {
         return res.status(200).json(clients);
     }
     async listOnline(req: Request, res: Response): Promise<Response> {
-        let name = req.query.name;
-
         let client: Clients[] = await Clients.find({
             where: { situation: "A" },
         });

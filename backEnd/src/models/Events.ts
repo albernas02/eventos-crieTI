@@ -1,6 +1,7 @@
 import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Users } from "./Users";
 import { Clients } from "./Clients";
+import { Tickets } from "./Tickets";
 
 
 @Entity('events')
@@ -36,11 +37,6 @@ export class Events extends BaseEntity {
     @JoinColumn({ name: "user_id" })
     user: Users;
 
-    @ManyToMany(() => Clients)
-    @JoinTable()
-    clients: Clients[];
-
-    @ManyToMany(() => Clients)
-    @JoinTable()
-    clientsPresence: Clients[];
+    @OneToMany(() => Tickets, ticket => ticket.event)
+    tickets: Tickets[];
 }

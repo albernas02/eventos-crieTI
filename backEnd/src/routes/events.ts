@@ -1,8 +1,6 @@
 import { Router, Request, Response, NextFunction } from "express";
-import { Clients } from "../models/Clients";
 import { EventsControllers } from "../controllers/EventsControllers";
 import * as yup from "yup";
-import { Not } from "typeorm";
 import { Events } from "../models/Events";
 
 let controller: EventsControllers = new EventsControllers();
@@ -53,11 +51,7 @@ let rotas: Router = Router();
 rotas.get("/events", controller.listAll);
 rotas.get("/events/:id", validar, controller.find);
 rotas.post("/events", validarPayload, controller.create);
-rotas.post("/checkIn/:id", controller.checkIn);
-rotas.post("/buy/:id", controller.buy);
-rotas.post("/checkOut/:id", controller.checkOut);
 rotas.put("/events/:id", validar, validarPayload, controller.update);
 rotas.delete("/events/:id", validar, controller.delete);
-// rotas.get("/userscsv",controller.gerarCSVusers);
 
 export default rotas;
