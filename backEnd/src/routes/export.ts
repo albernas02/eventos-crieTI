@@ -8,7 +8,6 @@ async function validate(req: Request, res: Response, next: NextFunction): Promis
     let id = Number(req.params.id);
 
     let client: Clients | null = await Clients.findOneBy({ id });
-    console.log(client)
     if (!client) {
         return res.status(422).json({ error: "Usuário nao encontrado" });
     }
@@ -30,7 +29,7 @@ async function validateEvent(req: Request, res: Response, next: NextFunction): P
 }
 let rotas: Router = Router();
 rotas.get("/pdf", controller.downloadPdf);
-rotas.get("/pdfPresence", controller.sendPdfPresence);
+rotas.get("/pdfPresence/:id/:event", controller.sendPdfPresence);
 rotas.get("/csv", controller.listCsv);
 rotas.post("/emailWelcome", controller.sendEmailWelcome);
 rotas.post("/emailBuy/:id", validate, validateEvent, controller.sendEmailBuy);

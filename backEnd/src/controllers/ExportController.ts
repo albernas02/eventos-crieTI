@@ -73,10 +73,16 @@ export class ExportController {
   }
 
   async sendPdfPresence(req: Request, res: Response) {
+    let body = req.body;
     let html: string = '';
 
-    let event: Events = res.locals.event;
-    let client: Clients = res.locals.client;
+    let id = Number(req.params.id);
+
+    let client: Clients | any = await Clients.findOneBy({ id: id });
+
+    id = Number(req.params.event)
+
+    let event: Events | any = await Events.findOneBy({ id: id })
 
     html = `<style>
         *{
@@ -98,26 +104,31 @@ export class ExportController {
         <h1>Lista eventos</h1>
       <table border="1">`;
 
-    let tickets: Tickets[] = await Tickets.find();
-
+    let ticket: Tickets | any = await Tickets.findOne({
+      where: {
+        client: {
+          id: client.id
+        },
+        event: {
+          id: event.id
+        }
+      }
+    });
 
     html += `<tr>
-      <th>Id</th>
-      <th>Client</th>
-      <th>Evento</th>`;
+      <th>Nome</th>
+      <th>Evento</th>
+      <th>Presente</th>`;
 
-    for (let ticket of tickets) {
-      if (ticket.client.id == client.id && ticket.event.id == event.id && ticket.presence == true) {
-        let ok = "Esteve presente"
-        html += `<tr>
+    let ok = "Esteve presente"
+    html += `<tr>
         <td>${ticket.client.name}</td>
         <td>${ticket.event.name}</td>
         <td>${ok}</td>`;
-      }
-    }
+
     html += "</table>";
     let today = new Date(Date.now());
-    let data = today.toLocaleString(); // "30/1/2022"
+    let data = today.toLocaleString();
     html += `<div>Gerado por: ${client.name} às ${data}</div>`;
 
     let pdf = await ExportController.pdf(html);
@@ -126,7 +137,7 @@ export class ExportController {
     res.setHeader('Content-Disposition', 'attachment; filename=seu_arquivo.pdf');
     res.send(pdf);
 
-    return res.status(200).json(pdf)
+    return res.status(200);
   }
 
   static async pdf(html: string): Promise<Buffer> {
@@ -212,7 +223,7 @@ export class ExportController {
       requireTLS: true,
       auth: {
         user: "atur.albernas2002@outlook.com",
-        pass: process.env.PASS,
+        pass: "Turilalaguto2002",
       },
       tls: {
         ciphers: "SSLv3",
@@ -227,7 +238,16 @@ export class ExportController {
     };
 
     let transporter = nodemailer.createTransport(emailConfig);
+    transporter.sendMail(mailOptions, async function (error, info) {
+      if (error) {
+        console.log("Erro ao enviar email:" + error);
+        return res.status(401).send("Erro ao enviar email" + error);
+      } else {
+        console.log("Email enviado: " + info.response);
+        return res.status(200).send("Email enviado: " + info.response);
+      }
+    });
 
-    transporter.sendMail(mailOptions);
+    return res.status(401);
   }
 }

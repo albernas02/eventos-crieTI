@@ -29,14 +29,13 @@ export class TicketControllers {
 
         try {
             // await exportController.sendEmailBuy(req, res);
-        } catch (e) {}
-        
+        } catch (e) { }
+
         return res.status(200).json(ticket);
     }
 
     async listWithClient(req: Request, res: Response): Promise<Response> {
         let client: Clients = res.locals.client;
-
         let tickets: Tickets[] = await Tickets.find({
             where: {
                 client: {
