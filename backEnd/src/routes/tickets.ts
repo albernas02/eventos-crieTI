@@ -35,6 +35,7 @@ async function validateEvent(req: Request, res: Response, next: NextFunction): P
 
 rotas.post('/buy/:id', validate, validateEvent, controller.buy);
 rotas.get('/tickets/:id', validate, controller.listWithClient);
+rotas.get('/tickets/event/:id', validate, controller.listWithEvent);
 rotas.post('/checkIn/:id', validate, validateEvent, controller.checkIn);
 rotas.post('/desist/:id', validate, validateEvent, controller.desist);
 

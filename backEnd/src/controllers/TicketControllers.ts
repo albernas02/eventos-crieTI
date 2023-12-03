@@ -47,6 +47,19 @@ export class TicketControllers {
         return res.status(200).json(tickets);
     }
 
+    async listWithEvent(req: Request, res: Response): Promise<Response> {
+        let event: Events | any = await Events.findOneBy({id : Number(req.params.id)});
+
+        let tickets: Tickets[] = await Tickets.find({
+            where: {
+                event: {
+                    id: event.id
+                }
+            }
+        })
+
+        return res.status(200).json(tickets);
+    }
     async checkIn(req: Request, res: Response): Promise<Response> {
         let client = res.locals.client
         let event: Events = res.locals.event
