@@ -186,7 +186,7 @@ function EventoCard({
 
                         {
                             checkinFeito &&
-                            <Link href="http://127.0.0.1:3000/pdfPresence" download target="_blank">
+                            <Link href={`http://127.0.0.1:3000/pdfPresence/${getUser().id}/${id}`} download target="_blank">
                             <Button colorScheme="blue" size="sm" variant={"outline"}>Comprovante</Button>
                             </Link>
                         }

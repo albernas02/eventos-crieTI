@@ -70,7 +70,7 @@ export default function Usuarios() {
     return (
     <AppLayout>
         <Flex mb={"4"} alignItems={"center"} justifyContent={"space-between"} >
-            <Heading size={"md"}>Usuários</Heading>
+            <Heading size={"md"}>Gerenciar Admin</Heading>
             <Flex>
                 <CadastroUsuarios />
             </Flex>

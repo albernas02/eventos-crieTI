@@ -6,11 +6,14 @@ import AppLayout from "@/components/layouts/AppLayout";
 import { AuthContext } from "@/contexts/AuthContext";
 import { apiClient } from "@/services/api";
 import { Badge, Box, Button, Flex, Heading, Image, Spinner } from "@chakra-ui/react";
-import moment from "moment";
 import { GetServerSideProps } from "next";
+import { parseCookies } from "nookies";
 import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { TbCheck, TbX } from "react-icons/tb";
+import moment from 'moment';
+import 'moment/locale/pt-br';
+moment.locale('pt-br');
 
 export interface IEventoCard {
     id?: number;
@@ -100,6 +103,7 @@ function EventoCard({
     const [isLoading, setLoading] = useState(false);
     const [_inscrito, _setInscrito] = useState(inscrito);
     const { getUser } = useContext(AuthContext);
+    const { auth_type } = parseCookies();
 
 
     async function acao() {
@@ -176,7 +180,7 @@ function EventoCard({
                     </Box>
 
                     <Flex mt={4} gap={2}>
-                        {!checkinFeito &&
+                        {!checkinFeito && auth_type != "users" &&
                             <Button colorScheme={_inscrito ? "red" : "purple"} variant={_inscrito ? "outline" : "solid"} size={"sm"} onClick={acao} leftIcon={!_inscrito ? <TbCheck /> : <TbX />}>
                                 {!_inscrito ? "Inscreva-se" : "Cancelar Inscrição"}
                             </Button>

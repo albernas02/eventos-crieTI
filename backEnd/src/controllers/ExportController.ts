@@ -29,7 +29,7 @@ export class ExportController {
           padding: 10px
         }
         </style>
-        <h1>Lista eventos</h1>
+        <h1>Comprovante de comparecimento</h1>
       <table border="1">`;
 
     let events: Events[] = await Events.find();

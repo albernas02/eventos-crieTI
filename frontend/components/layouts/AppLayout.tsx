@@ -46,8 +46,7 @@ import NextNProgress from "nextjs-progressbar";
 import { AuthContext } from '@/contexts/AuthContext'
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import { RxExit } from "react-icons/rx";
-
-
+import { HiOutlineDocumentReport } from "react-icons/hi";
 
 
 interface LinkItemProps {
@@ -76,10 +75,10 @@ const LinkItems: Array<LinkItemProps> = [
     { name: 'Home', icon: FiHome, href: "/" },
     { name: 'Eventos', icon: HiOutlineCalendarDays, href: "/eventos" },
     { name: 'Usuários', icon: HiOutlineUsers, href: "/admin/clientes", permission: "users" },
+    { name: 'Relatório de Eventos', icon: HiOutlineDocumentReport, href: "/admin/encerrados", permission: "users" },
     { name: 'Gerenciar Eventos', icon: HiOutlineCalendarDays, href: "/admin/eventos", permission: "users" },
     { name: 'Inscrições', icon: IoTicketOutline, href: "/inscricoes", permission: "clients" },
     { name: 'Gerenciar Admin', icon: MdOutlineAdminPanelSettings, href: "/admin/usuarios", permission: "users" },
-
 ]
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
@@ -218,7 +217,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
 }
 
 export default function AppLayout({ children }: any) {
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     return (
         <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>

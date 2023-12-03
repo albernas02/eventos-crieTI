@@ -42,16 +42,18 @@ import { GetServerSideProps } from "next";
 import { checkUserAuth } from "@/Utils/pageAuthCheck";
 import Link from "next/link";
 import { IoEye, IoEyeSharp } from "react-icons/io5";
+import Eventos from "../eventos";
 
-interface IClientes {
+interface IEvento {
     id?: number;
     name: string;
-    email: string;
-    password: string;
-    phone: string;
-    CPF: string;
+    description: string;
+    price: string;
     address: string;
-    situation: string;
+    startDate: Date;
+    endDate: Date;
+    situation?: string;
+    type: string;
 }
 
 export const getServerSideProps: GetServerSideProps = checkUserAuth(async (ctx) => {
@@ -60,11 +62,11 @@ export const getServerSideProps: GetServerSideProps = checkUserAuth(async (ctx) 
     }
 }, "users");
 
-export default function Eventos() {
-    const [dados, setDados] = useState<IClientes[]>([]);
+export default function Encerrados() {
+    const [dados, setDados] = useState<IEvento[]>([]);
 
     async function carregarDados() {
-        let response = await apiClient.get('/clients');
+        let response = await apiClient.get('/events');
 
         setDados(response.data);
     }
@@ -77,24 +79,24 @@ export default function Eventos() {
     return (
         <AppLayout>
             <Flex mb={"4"} alignItems={"center"} justifyContent={"space-between"}>
-                <Heading size={"md"}>Usuários</Heading>
+                <Heading size={"md"}>Relatório de Eventos</Heading>
             </Flex>
             <TableContainer>
                 <Table size="lg" variant="simple">
                     <Thead>
                         <Tr>
-                            <Th>Nome</Th>
                             <Th>Eventos</Th>
+                            <Th>Participantes</Th>
                         </Tr>
                     </Thead>
                     <Tbody>
                         {
-                            dados?.map(cliente => <Tr>
-                                <Td>{cliente.name}</Td>
+                            dados?.map(Eventos => <Tr>
+                                <Td>{Eventos.name}</Td>
                                 {/* ... */}
 
                                 <Td>
-                                    <VisualizarEventos cliente={cliente} />
+                                    <VisualizarUsuarios evento={Eventos} />
                                 </Td>
                             </Tr>)
                         }
@@ -106,13 +108,13 @@ export default function Eventos() {
     );
 
 
-    function VisualizarEventos({ cliente, textoBotao = "Visualizar", icone = <IoEyeSharp /> }: { cliente?: IClientes, textoBotao?: string, icone?: any }) {
+    function VisualizarUsuarios({ evento, textoBotao = "Visualizar", icone = <IoEyeSharp /> }: { evento?: IEvento, textoBotao?: string, icone?: any }) {
         const { isOpen, onOpen, onClose } = useDisclosure();
 
         const [dados, setDados] = useState<any[]>([]);
 
         async function carregarDados() {
-            let response = await apiClient.get(`/tickets/${cliente?.id}`);
+            let response = await apiClient.get(`/tickets/${evento?.id}`);
 
             setDados(response.data);
         }
@@ -139,7 +141,7 @@ export default function Eventos() {
                 >
                     <ModalOverlay />
                     <ModalContent>
-                        <ModalHeader>Eventos</ModalHeader>
+                        <ModalHeader>Usuários</ModalHeader>
                         <ModalCloseButton />
                         <ModalBody pb={6}>
 
@@ -148,16 +150,17 @@ export default function Eventos() {
                         <Table size="lg" variant="simple">
                             <Thead>
                                 <Tr>
-                                    <Th>Evento</Th>
+                                    <Th>Usuário</Th>
+                                    <Th>CPF</Th>
+                                    <Th>Comparecimento</Th>
                                 </Tr>
                             </Thead>
                             <Tbody>
                                 {
-                                    dados?.map(ticket => <Tr key={ticket.id}>
-                                        <Td>{ticket.event.name}</Td>
-                                        <Td>{ticket.event.description}</Td>
-                                        <Td>{ticket.event.address}</Td>
-                                        <Td>{moment(ticket.event.startDate).format("llll")}</Td>
+                                    dados?.map(ticket => <Tr key={ticket.id} >
+                                        <Td>{ticket.client.name}</Td>
+                                        <Td>{ticket.client.CPF}</Td>
+                                        <Td>{ticket.presence ? "Sim":"Não" }</Td>
                                         {/* ... */}
                                     </Tr>)
                                 }

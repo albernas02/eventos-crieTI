@@ -77,7 +77,7 @@ export default function Eventos() {
     return (
         <AppLayout>
             <Flex mb={"4"} alignItems={"center"} justifyContent={"space-between"}>
-                <Heading size={"md"}>Eventos</Heading>
+                <Heading size={"md"}>Gerenciar Eventos</Heading>
                 <Flex gap="2">
 
                     <Link href="http://127.0.0.1:3000/csv" download target="_blank">
