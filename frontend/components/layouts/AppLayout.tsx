@@ -21,6 +21,7 @@ import {
     MenuDivider,
     MenuItem,
     MenuList,
+    Heading,
 } from '@chakra-ui/react'
 import {
     FiHome,
@@ -44,6 +45,8 @@ import { parseCookies } from 'nookies'
 import NextNProgress from "nextjs-progressbar";
 import { AuthContext } from '@/contexts/AuthContext'
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
+import { RxExit } from "react-icons/rx";
+
 
 
 
@@ -72,7 +75,7 @@ interface SidebarProps extends BoxProps {
 const LinkItems: Array<LinkItemProps> = [
     { name: 'Home', icon: FiHome, href: "/" },
     { name: 'Eventos', icon: HiOutlineCalendarDays, href: "/eventos" },
-    { name: 'Usuários', icon: HiOutlineUsers, href: "/admin/clientes", permission: "users"},
+    { name: 'Usuários', icon: HiOutlineUsers, href: "/admin/clientes", permission: "users" },
     { name: 'Gerenciar Eventos', icon: HiOutlineCalendarDays, href: "/admin/eventos", permission: "users" },
     { name: 'Inscrições', icon: IoTicketOutline, href: "/inscricoes", permission: "clients" },
     { name: 'Gerenciar Admin', icon: MdOutlineAdminPanelSettings, href: "/admin/usuarios", permission: "users" },
@@ -91,7 +94,10 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
             h="full"
             {...rest}>
             <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-                    <Image src="/imagens/92969c3c-5d00-4121-a391-1c3d06d2f072.png" height="50px" width="70px" alt='logo' />
+                <Flex gap="3" align="center">
+                    <Image src="/imagens/92969c3c-5d00-4121-a391-1c3d06d2f072.png" height="45px" width="55px" alt='logo' />
+                    <Heading display="flex" gap="1" fontSize={"xl"}>Crie<Text color="purple.500">Eventos</Text></Heading>
+                </Flex>
                 <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
             </Flex>
             {LinkItems.map((link) => (
@@ -117,43 +123,43 @@ const NavItem = ({ icon, href, children, permission, ...rest }: NavItemProps) =>
 
 
     return (
-        <Link href={href} style={{textDecoration: "none"}}>
-        <Box
-            style={{ textDecoration: 'none' }}
-            _focus={{ boxShadow: 'none' }}>
-            <Flex
-                align="center"
-                p="4"
-                mx="4"
-                borderRadius="lg"
-                role="group"
-                cursor="pointer"
-                color={isActive ? 'purple.400' : undefined}
-                fontWeight={isActive ? 'semibold' : undefined}
-                _hover={{
-                    bg: 'purple.400',
-                    color: 'white',
-                }}
-                {...rest}>
-                {icon && (
-                    <Icon
-                        mr="4"
-                        fontSize="16"
-                        _groupHover={{
-                            color: 'white',
-                        }}
-                        as={icon}
-                    />
-                )}
-                {children}
-            </Flex>
-        </Box>
+        <Link href={href} style={{ textDecoration: "none" }}>
+            <Box
+                style={{ textDecoration: 'none' }}
+                _focus={{ boxShadow: 'none' }}>
+                <Flex
+                    align="center"
+                    p="4"
+                    mx="4"
+                    borderRadius="lg"
+                    role="group"
+                    cursor="pointer"
+                    color={isActive ? 'purple.400' : undefined}
+                    fontWeight={isActive ? 'semibold' : undefined}
+                    _hover={{
+                        bg: 'purple.400',
+                        color: 'white',
+                    }}
+                    {...rest}>
+                    {icon && (
+                        <Icon
+                            mr="4"
+                            fontSize="16"
+                            _groupHover={{
+                                color: 'white',
+                            }}
+                            as={icon}
+                        />
+                    )}
+                    {children}
+                </Flex>
+            </Box>
         </Link>
     )
 }
 
 const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
-    const {getUser} = useContext(AuthContext);
+    const { getUser } = useContext(AuthContext);
     return (
         <Flex
             ml={{ base: 0, md: 60 }}
@@ -176,7 +182,6 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
             {/* <Image src="/imagens/92969c3c-5d00-4121-a391-1c3d06d2f072.png" marginX="alto" height="50px" width="70px" alt='logo' /> */}
 
             <HStack spacing={{ base: '0', md: '6' }}>
-                <IconButton size="lg" variant="ghost" aria-label="open menu" icon={<FiBell />} />
                 <Flex alignItems={'center'}>
                     <Menu>
                         <MenuButton py={2} transition="all 0.3s" _focus={{ boxShadow: 'none' }}>
@@ -202,7 +207,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                             borderColor={useColorModeValue('gray.200', 'gray.700')}>
                             {/* <MenuItem>Conta</MenuItem> */}
                             <Link href="/logout">
-                            <MenuItem>Sair</MenuItem>
+                                <MenuItem color="red" icon={<RxExit />}>Sair</MenuItem>
                             </Link>
                         </MenuList>
                     </Menu>
