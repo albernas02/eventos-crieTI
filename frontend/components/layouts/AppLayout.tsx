@@ -72,7 +72,7 @@ interface SidebarProps extends BoxProps {
 const LinkItems: Array<LinkItemProps> = [
     { name: 'Home', icon: FiHome, href: "/" },
     { name: 'Eventos', icon: HiOutlineCalendarDays, href: "/eventos" },
-    { name: 'Usuários', icon: HiOutlineUsers, href: "/admin/clientes"},
+    { name: 'Usuários', icon: HiOutlineUsers, href: "/admin/clientes", permission: "users"},
     { name: 'Gerenciar Eventos', icon: HiOutlineCalendarDays, href: "/admin/eventos", permission: "users" },
     { name: 'Inscrições', icon: IoTicketOutline, href: "/inscricoes", permission: "clients" },
     { name: 'Gerenciar Admin', icon: MdOutlineAdminPanelSettings, href: "/admin/usuarios", permission: "users" },
