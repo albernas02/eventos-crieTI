@@ -27,7 +27,9 @@ export class TicketControllers {
             presence: false
         }).save();
 
-        await exportController.sendEmailBuy(req, res);
+        try {
+            // await exportController.sendEmailBuy(req, res);
+        } catch (e) {}
         
         return res.status(200).json(ticket);
     }
@@ -35,16 +37,15 @@ export class TicketControllers {
     async listWithClient(req: Request, res: Response): Promise<Response> {
         let client: Clients = res.locals.client;
 
-        let tickets: Tickets[] = await Tickets.find()
-        let events: Events[] | null = [];
-
-        for (let ticket of tickets) {
-            if (ticket.client.id = client.id) {
-                events.push(ticket.event)
+        let tickets: Tickets[] = await Tickets.find({
+            where: {
+                client: {
+                    id: client.id
+                }
             }
-        }
+        })
 
-        return res.status(200).json(events);
+        return res.status(200).json(tickets);
     }
 
     async checkIn(req: Request, res: Response): Promise<Response> {

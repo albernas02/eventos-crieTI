@@ -32,6 +32,8 @@ export default function Login() {
   useEffect(() => {
     destroyCookie(undefined, 'token')
 
+    destroyCookie(undefined, 'user')
+
     setCookie(undefined, 'auth_type', "clients", {
       maxAge: 60 * 60 * 24 * 7, // 7 dias
       path: "/"

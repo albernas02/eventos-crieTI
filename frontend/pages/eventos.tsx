@@ -3,14 +3,16 @@
 import { formatMoney } from "@/Utils/helpers";
 import { checkUserAuth } from "@/Utils/pageAuthCheck";
 import AppLayout from "@/components/layouts/AppLayout";
+import { AuthContext } from "@/contexts/AuthContext";
 import { apiClient } from "@/services/api";
-import { Badge, Box, Button, Flex, Heading, Image } from "@chakra-ui/react";
+import { Badge, Box, Button, Flex, Heading, Image, Spinner } from "@chakra-ui/react";
 import moment from "moment";
 import { GetServerSideProps } from "next";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { TbCheck, TbX } from "react-icons/tb";
 
-interface IEventoCard {
+export interface IEventoCard {
     id?: number;
     name: string;
     description: string;
@@ -33,10 +35,14 @@ export const getServerSideProps: GetServerSideProps = checkUserAuth(
 
 export default function Eventos() {
     const [dados, setDados] = useState<IEventoCard[]>([]);
+    const [inscricoes, setInscricoes] = useState<any[]>([]);
+    const { getUser } = useContext(AuthContext);
 
     async function carregarDados() {
-        let response = await apiClient.get('/events');
+        let response = await apiClient.get(`/tickets/${getUser()?.id}`);
+        setInscricoes(response.data);
 
+        response = await apiClient.get('/events');
         setDados(response.data);
     }
 
@@ -47,13 +53,25 @@ export default function Eventos() {
 
     return (
         <AppLayout>
-            <Heading size={"md"} >Eventos</Heading>
+            <Heading size={"md"}>Eventos</Heading>
             <Flex wrap={"wrap"}>
                 {
-                    dados?.map(evento =>
+                    dados?.sort((a, b) => {
+                        if (inscricoes?.find(inscricao => inscricao.event.id == a.id)) {
+                            return 1;
+                        }
+
+                        if (inscricoes?.find(inscricao => inscricao.event.id == b.id)) {
+                            return -1;
+                        }
+
+                        return 0;
+                    })?.map(evento =>
                         <EventoCard
+                            key={evento.id}
                             id={evento.id}
-                            inscrito={true}
+                            inscrito={inscricoes?.filter(inscricao => inscricao.event.id == evento.id)?.length > 0}
+                            checkinFeito={inscricoes?.find(inscricao => inscricao.event.id == evento.id)?.presence}
                             nome={evento.name}
                             momento={moment(evento.startDate).format('llll')}
                             valor={evento.price.replace(",", ".")}
@@ -76,27 +94,35 @@ function EventoCard({
     endereco,
     tipo,
     descricao,
-    inscrito = false
+    inscrito = false,
+    checkinFeito
 }: any) {
     const [isLoading, setLoading] = useState(false);
     const [_inscrito, _setInscrito] = useState(inscrito);
+    const { getUser } = useContext(AuthContext);
+
 
     async function acao() {
         setLoading(true);
         if (_inscrito) {
-            // Chamar api de desinscrever
 
-            _setInscrito(false);
-        } else {
-            // Chamar api de inscricao
             try {
-                // await apiClient.post(`/eventos/${id}/inscrever`, {
-                //     user_id: 1
-                // });
+                await apiClient.post(`/desist/${getUser()?.id}`, { eventId: id });
+
+                _setInscrito(false);
+                toast.success("Inscrição cancelada com sucesso!");
+            } catch (e) {
+                toast.error(e?.response?.data?.mensagem || "Algo deu errado!");
+            }
+        } else {
+
+            try {
+                await apiClient.post(`/buy/${getUser()?.id}`, { eventId: id });
+
                 _setInscrito(true);
                 toast.success("Inscrito com sucesso");
-            } catch {
-                toast.error("Mensagem");
+            } catch (e) {
+                toast.error(e?.response?.data?.mensagem || "Algo deu errado!");
             }
         }
         setLoading(false);
@@ -104,7 +130,10 @@ function EventoCard({
 
 
     return (
-        <Box maxW={{ base: "full", md: "50%", lg: "33.33%" }} p={4} h="full" alignSelf={"stretch"}>
+        <Box maxW={{ base: "full", md: "50%", lg: "33.33%" }} p={4} h="full" alignSelf={"stretch"} position={"relative"}>
+            <Flex display={isLoading ? "flex" : "none"} align="center" justify="center" position={"absolute"} top={0} bottom={0} left={0} right={0} bg={"whiteAlpha.400"} backdropFilter={"blur(2px)"} zIndex={10}>
+                <Spinner h="10" w="10" color="purple.500" />
+            </Flex>
             <Box borderWidth="1px" borderRadius="lg" overflow="hidden">
                 <Image src={imagemUrl} alt="Evento" />
 
@@ -147,13 +176,15 @@ function EventoCard({
                     </Box>
 
                     <Flex mt={4} gap={2}>
-                        <Button colorScheme="purple" variant={_inscrito ? "outline" : "solid"} size={"sm"} onClick={acao}>
-                            {!_inscrito ? "Inscreva-se" : "Inscrito"}
-                        </Button>
-
-                        {
-                            _inscrito && <Button colorScheme="green" size="sm">Check-in</Button>
+                        {!checkinFeito &&
+                            <Button colorScheme={_inscrito ? "red" : "purple"} variant={_inscrito ? "outline" : "solid"} size={"sm"} onClick={acao} leftIcon={!_inscrito ? <TbCheck /> : <TbX />}>
+                                {!_inscrito ? "Inscreva-se" : "Cancelar Inscrição"}
+                            </Button>
                         }
+
+                        {/* {
+                            _inscrito && <Button colorScheme="green" size="sm">Check-in</Button>
+                        } */}
                     </Flex>
                 </Box>
             </Box>

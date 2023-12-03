@@ -25,7 +25,7 @@ async function validateEvent(req: Request, res: Response, next: NextFunction): P
     let event: Events | null = await Events.findOneBy({ id });
 
     if (!event) {
-        return res.status(422).json({ error: "Evento nao encontrado" });
+        return res.status(422).json({ error: "Evento não encontrado" });
     }
     res.locals.event = event;
 

@@ -223,21 +223,11 @@ export class ExportController {
       from: "atur.albernas2002@outlook.com",
       to: client.email,
       subject: "Crie_TI eventos agradece a preferência",
-      html: `Estamos muito felizes contar com você ${client.name} no evento ${event.name}!`,
+      html: `Estamos muito felizes em contar com você ${client.name} no evento ${event.name}!`,
     };
 
     let transporter = nodemailer.createTransport(emailConfig);
 
-    transporter.sendMail(mailOptions, async function (error, info) {
-      if (error) {
-        console.log("Erro ao enviar email:" + error);
-        return res.status(401).send("Erro ao enviar email" + error);
-      } else {
-        console.log("Email enviado: " + info.response);
-        return res.status(200).send("Email enviado: " + info.response);
-      }
-    });
-
-    return res.status(401);
+    transporter.sendMail(mailOptions);
   }
 }

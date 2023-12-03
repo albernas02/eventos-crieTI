@@ -24,26 +24,21 @@ export interface ILogin {
 }
 
 export interface IAuthContext {
-  isAuthenticated: boolean;
   token?: string;
-  user?: IUser | null;
+  getUser: () => IUser;
   login: (email: string, password: string, route: string) => Promise<void>;
-  updateUserData: () => Promise<void>;
 }
 
 export const AuthContext = createContext({} as IAuthContext);
 
 export function AuthProvider({ children }: any) {
-  const [user, setUser] = useState<IUser | null>(null);
-  const { token } = parseCookies();
+  const { token, user: _user } = parseCookies();
 
-  const isAuthenticated = !!user;
+  function getUser() {
+    const { user: _user } = parseCookies();
 
-  useEffect(() => {
-    if (token) {
-      updateUserData();
-    }
-  }, []);
+    return JSON.parse(_user || "{}") as IUser;
+  }
 
   async function login(email: string, password: string, route = "/loginUsers") {
     try {
@@ -53,17 +48,20 @@ export function AuthProvider({ children }: any) {
       });
 
       const token = response.data.token;
+          console.log(response.data)
 
             setCookie(undefined, 'token', token, {
                 maxAge: 60 * 60 * 24 * 7, // 7 dias
                 path: "/"
             });
 
+            setCookie(undefined, 'user', JSON.stringify(response.data.user), {
+              maxAge: 60 * 60 * 24 * 7, // 7 dias
+              path: "/"
+          });
+
       // Making sure the token is up to date
       apiClient.defaults.headers["Authorization"] = `Bearer ${token}`;
-
-      // Fetch user data
-      await updateUserData();
 
       toast.success("Bem vindo!", {
         duration: 1000,
@@ -83,45 +81,9 @@ export function AuthProvider({ children }: any) {
     }
   }
 
-  async function updateUserData() {
-    return;
-    try {
-      const response = await apiClient.get("/me");
-      if (response.status == 200) {
-        setUser(response.data.data);
-
-        // Update cookie duration
-        const { token } = parseCookies();
-
-        if (token) {
-          setCookie(undefined, "token", token, {
-            maxAge: 60 * 60 * 24 * 7, // 7 dias
-          });
-        }
-      } else {
-        toast.error(
-          "Algo deu errado ao obter os dados do usuário! Por favor, recarregue a tela e tente novamente."
-        );
-      }
-    } catch (err) {
-      if (err instanceof AxiosError) {
-        if (err.response?.status == 401) {
-          toast.error("Sessão expirada!");
-
-          destroyCookie(undefined, "token");
-        }
-        return;
-      }
-
-      toast.error(
-        "Algo deu errado ao obter os dados do usuário! Por favor, recarregue a tela e tente novamente."
-      );
-    }
-  }
-
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, user, token, login, updateUserData }}
+      value={{ getUser, token, login }}
     >
       {children}
     </AuthContext.Provider>

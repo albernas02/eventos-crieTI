@@ -33,7 +33,7 @@ import {
     FiChevronDown,
 } from 'react-icons/fi'
 import { IconType } from 'react-icons'
-import { Children } from 'react'
+import { Children, useContext } from 'react'
 import { TbCalendar } from "react-icons/tb";
 import { IoTicketOutline } from "react-icons/io5";
 import { HiOutlineCalendar, HiOutlineCalendarDays, HiOutlineUsers } from "react-icons/hi2";
@@ -42,6 +42,9 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { parseCookies } from 'nookies'
 import NextNProgress from "nextjs-progressbar";
+import { AuthContext } from '@/contexts/AuthContext'
+import { MdOutlineAdminPanelSettings } from "react-icons/md";
+
 
 
 interface LinkItemProps {
@@ -69,9 +72,11 @@ interface SidebarProps extends BoxProps {
 const LinkItems: Array<LinkItemProps> = [
     { name: 'Home', icon: FiHome, href: "/" },
     { name: 'Eventos', icon: HiOutlineCalendarDays, href: "/eventos" },
+    { name: 'Usuários', icon: HiOutlineUsers, href: "/admin/clientes"},
     { name: 'Gerenciar Eventos', icon: HiOutlineCalendarDays, href: "/admin/eventos", permission: "users" },
-    { name: 'Inscrições', icon: IoTicketOutline, href: "/incricoes", permission: "clients" },
-    { name: 'Gerenciar Usuários', icon: HiOutlineUsers, href: "/admin/usuarios", permission: "users" },
+    { name: 'Inscrições', icon: IoTicketOutline, href: "/inscricoes", permission: "clients" },
+    { name: 'Gerenciar Admin', icon: MdOutlineAdminPanelSettings, href: "/admin/usuarios", permission: "users" },
+
 ]
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
@@ -148,6 +153,7 @@ const NavItem = ({ icon, href, children, permission, ...rest }: NavItemProps) =>
 }
 
 const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
+    const {getUser} = useContext(AuthContext);
     return (
         <Flex
             ml={{ base: 0, md: 60 }}
@@ -177,17 +183,14 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                             <HStack>
                                 <Avatar
                                     size={'sm'}
-                                    name='Joaozinho'
+                                    name={getUser()?.name}
                                 />
                                 <VStack
                                     display={{ base: 'none', md: 'flex' }}
                                     alignItems="flex-start"
                                     spacing="1px"
                                     ml="2">
-                                    <Text fontSize="sm">[Nome]</Text>
-                                    {/* <Text fontSize="xs" color="gray.600">
-                                        Admin
-                                    </Text> */}
+                                    <Text fontSize="sm">{getUser()?.name}</Text>
                                 </VStack>
                                 <Box display={{ base: 'none', md: 'flex' }}>
                                     <FiChevronDown />

@@ -31,6 +31,7 @@ export default function Login() {
     // If there already is a token, redirect to dashboard
     useEffect(() => {
         destroyCookie(undefined, 'token');
+        destroyCookie(undefined, 'user');
 
         setCookie(undefined, 'auth_type', "users", {
             maxAge: 60 * 60 * 24 * 7, // 7 dias
