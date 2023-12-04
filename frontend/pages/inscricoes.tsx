@@ -71,7 +71,7 @@ export default function Inscricoes() {
                             removerEvento={removerEvento}
                             marcarCheckin={marcarCheckin}
                             checkinFeito={presence}
-                            imagemUrl={evento.imgUrl ? evento.imgUrl: "https://via.placeholder.com/300x200?text=Sem%20Imagem"}
+                            imagemUrl={evento.imgUrl ? evento.imgUrl : "https://via.placeholder.com/500x300?text=Evento"}
                         />
                     )}
             </Flex>

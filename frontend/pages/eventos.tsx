@@ -80,7 +80,7 @@ export default function Eventos() {
                             endereco={evento.address}
                             tipo={evento.type}
                             descricao={evento.description}
-                            imagemUrl={evento.imgUrl ? evento.imgUrl: "https://via.placeholder.com/500x300?text=Evento"}
+                            imagemUrl={evento.imgUrl ? evento.imgUrl : "https://via.placeholder.com/500x300?text=Evento"}
                         />
                     )}
             </Flex>
