@@ -12,8 +12,6 @@ import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { TbCheck, TbX } from "react-icons/tb";
 import moment from 'moment';
-import 'moment/locale/pt-br';
-moment.locale('pt-br');
 
 export interface IEventoCard {
     id?: number;
@@ -76,7 +74,7 @@ export default function Eventos() {
                             inscrito={inscricoes?.filter(inscricao => inscricao.event.id == evento.id)?.length > 0}
                             checkinFeito={inscricoes?.find(inscricao => inscricao.event.id == evento.id)?.presence}
                             nome={evento.name}
-                            momento={moment(evento.startDate).format('llll')}
+                            momento={evento.startDate}
                             valor={evento.price.replace(",", ".")}
                             endereco={evento.address}
                             tipo={evento.type}
@@ -186,9 +184,6 @@ function EventoCard({
                             </Button>
                         }
 
-                        {/* {
-                            _inscrito && <Button colorScheme="green" size="sm">Check-in</Button>
-                        } */}
                     </Flex>
                 </Box>
             </Box>

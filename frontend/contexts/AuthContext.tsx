@@ -67,7 +67,7 @@ export function AuthProvider({ children }: any) {
         duration: 1000,
       });
 
-      Router.push("/");
+      Router.push("/eventos");
     } catch (err) {
       if (err instanceof AxiosError) {
         if (err.response?.data?.mensagem) {

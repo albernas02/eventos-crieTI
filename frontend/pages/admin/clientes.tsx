@@ -149,6 +149,9 @@ export default function Eventos() {
                             <Thead>
                                 <Tr>
                                     <Th>Evento</Th>
+                                    <Th>Descrição</Th>
+                                    <Th>Endereço</Th>
+                                    <Th>Data/Hora</Th>
                                 </Tr>
                             </Thead>
                             <Tbody>

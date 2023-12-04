@@ -13,10 +13,11 @@ async function validarPayload(
     let schema = yup.object({
         name: yup.string().min(3).max(255).required(),
         email: yup.string().email().required(),
-        password: yup.string().min(6).max(16).required(),
+        password: yup.string().nullable(),
         phone: yup.string().min(9).max(15).required(),
         CPF: yup.string().min(11).max(13).required(),
-        address: yup.string().min(3).max(255).required()
+        address: yup.string().min(3).max(255).required(),
+        situation: yup.string().nullable()
     });
 
     let payload = req.body;
@@ -63,7 +64,7 @@ async function validarSeEmailExiste(
 
     let user: Users | null = await Users.findOneBy({ email, id: id ? Not(id) : undefined });//quando o id do editar for igual o id
     if (user) {
-        return res.status(422).json({ error: "Email ja cadastrado" });
+        return res.status(422).json({ error: "Email já cadastrado" });
     }
     return next();
 }

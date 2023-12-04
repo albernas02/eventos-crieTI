@@ -15,7 +15,7 @@ export class EventsControllers {
         let name = req.query.name;
 
         let event: Events[] = await Events.find({
-            where: { situation: "A" },
+            where: { situation: "Ativo" },
         });
         return res.status(200).json(event);
     }
@@ -24,12 +24,12 @@ export class EventsControllers {
         let name = req.query.name;
 
         let aux: Events[] = await Events.find({
-            where: { situation: "A" },
+            where: { situation: "Ativo" },
         });
 
         let events = aux.filter(event => event.endDate > new Date());
 
-        events.forEach((element) => element.situation = 'I', (element) => element.save());
+        events.forEach((element) => element.situation = 'Inativo', (element) => element.save());
 
 
         return res.status(200).json(aux);
@@ -46,18 +46,6 @@ export class EventsControllers {
 
         let startDate = body.startDate;
         let endDate = body.endDate;
-
-        // let parts = startDate.split('/');
-        // startDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
-        // 
-        // parts = endDate.split('/');
-        // endDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
-        // 
-        // startDate = new Date(startDate)
-        // endDate = new Date(endDate)
-
-        // let user: Users | any = localStorage.getItem('user');
-        console.log('hello')
         let user: Users | null = await Users.findOneBy({ id: body.user })
 
         if (!user) {
@@ -72,7 +60,7 @@ export class EventsControllers {
             price: body.price,
             startDate: startDate,
             endDate: endDate,
-            situation: 'A',
+            situation: body.situation,
             user: user,
         }).save();
 
@@ -100,6 +88,7 @@ export class EventsControllers {
         event.startDate = startDate;
         event.endDate = endDate;
         event.user = user;
+        event.situation = body.situation;
 
         await event.save();
 
@@ -115,7 +104,7 @@ export class EventsControllers {
             return res.status(200).json({ message: "Evento não encontrado" });
         }
 
-        events.situation = 'I';
+        events.situation = 'Inativo';
 
         await events.save();
 

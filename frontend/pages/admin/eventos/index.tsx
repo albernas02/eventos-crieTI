@@ -101,7 +101,7 @@ export default function Eventos() {
                         PDV
                     </Button>
                     </Link>
-                    <CadastroEventos />
+                    <CadastroEventos callback={carregarDados} />
                 </Flex>
             </Flex>
             <TableContainer>
@@ -133,7 +133,7 @@ export default function Eventos() {
                                 {/* ... */}
 
                                 <Td>
-                                    <CadastroEventos evento={evento} textoBotao="Editar" icone={<PiPencil/>} />
+                                    <CadastroEventos callback={carregarDados} evento={evento} textoBotao="Editar" icone={<PiPencil/>} />
                                 </Td>
                             </Tr>)
                         }
@@ -145,8 +145,9 @@ export default function Eventos() {
     );
 
 
-    function CadastroEventos({ evento, textoBotao = "Novo", icone = <PiPlusLight /> }: {evento?: IEvento, textoBotao?: string, icone?: any}) {
+    function CadastroEventos({ evento, textoBotao = "Novo", icone = <PiPlusLight />, callback }: {evento?: IEvento, textoBotao?: string, icone?: any, callback: any}) {
         const { isOpen, onOpen, onClose } = useDisclosure();
+        const { getUser } = useContext(AuthContext);
 
         const { register, handleSubmit } = useForm({
             defaultValues: {
@@ -154,8 +155,8 @@ export default function Eventos() {
                 description: evento?.description,
                 price: evento?.price,
                 address: evento?.address,
-                startDate: evento?.startDate,
-                endDate: evento?.endDate,
+                startDate: moment(evento?.startDate).format('YYYY-MM-DD\THH:mm'),
+                endDate: moment(evento?.endDate).format('YYYY-MM-DD\THH:mm'),
                 type: evento?.type,
                 situation: evento?.situation
 
@@ -166,8 +167,7 @@ export default function Eventos() {
             try {
                 let response = null;
 
-                // corrigir mais tarde 
-                values.user = 5; 
+                values.user = getUser().id;
                 if (evento?.id) {
                     // Editar
                     response = await apiClient.put(`/events/${evento?.id}`, values);
@@ -175,6 +175,7 @@ export default function Eventos() {
                     response = await apiClient.post(`/events`, values);
                 }
 
+                callback();
                 onClose()
 
             } catch (err) {
@@ -226,7 +227,7 @@ export default function Eventos() {
 
                                 <FormControl id="startDate" isRequired mt={4}>
                                     <FormLabel>Data de Início</FormLabel>
-                                    <Input  type="datetime-local" {...register('startDate')} />
+                                    <Input type="datetime-local" {...register('startDate')} />
                                 </FormControl>
 
                                 <FormControl id="endDate" isRequired mt={4}>

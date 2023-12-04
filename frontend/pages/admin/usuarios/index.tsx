@@ -72,7 +72,7 @@ export default function Usuarios() {
         <Flex mb={"4"} alignItems={"center"} justifyContent={"space-between"} >
             <Heading size={"md"}>Gerenciar Admin</Heading>
             <Flex>
-                <CadastroUsuarios />
+                <CadastroUsuarios callback={carregarDados} />
             </Flex>
         </Flex>
         <TableContainer>
@@ -98,7 +98,7 @@ export default function Usuarios() {
                         {/* ... */}
 
                         <Td textAlign={"center"}>
-                            <CadastroUsuarios usuario={usuario} textoBotao="Editar" icone={<PiPencil/>} />
+                            <CadastroUsuarios callback={carregarDados} usuario={usuario} textoBotao="Editar" icone={<PiPencil/>} />
                         </Td>
                     </Tr>)
                 }
@@ -108,14 +108,14 @@ export default function Usuarios() {
     </AppLayout>
 );
 
-    function CadastroUsuarios({ usuario, textoBotao = "Novo", icone = <PiPlusLight />}: {usuario?: IUsuario, textoBotao?: string, icone?: any}) {
+    function CadastroUsuarios({ usuario, callback, textoBotao = "Novo", icone = <PiPlusLight />}: {usuario?: IUsuario, textoBotao?: string, icone?: any, callback: any}) {
         const { isOpen, onOpen, onClose } = useDisclosure();
 
         const { register, handleSubmit } = useForm({
             defaultValues: {
                 name: usuario?.name,
                 email: usuario?.email,
-                password: usuario?.password,
+                password: "",
                 address: usuario?.address,
                 CPF: usuario?.CPF,
                 phone: usuario?.phone,
@@ -135,6 +135,7 @@ export default function Usuarios() {
                     response = await apiClient.post(`/users`, values);
                 }
 
+                callback()
                 onClose()
                 
             } catch (err) {
@@ -174,12 +175,12 @@ export default function Usuarios() {
                                     <Input {...register('email')} />
                                 </FormControl>
 
-                                <FormControl id="Password" isRequired mt={4}>
+                                <FormControl id="Password" mt={4}>
                                     <FormLabel>Senha</FormLabel>
-                                    <Input {...register('password')} />
+                                    <Input placeholder="Deixe em branco para não alterar" {...register('password')} />
                                 </FormControl>
 
-                                <FormControl id="Password" isRequired mt={4}>
+                                <FormControl id="Password"mt={4}>
                                     <FormLabel>Confirme sua senha</FormLabel>
                                     <Input {...register('password')} />
                                 </FormControl>

@@ -13,7 +13,7 @@ export class AutenticationController {
             select: ["id", "email", "password", "name"],
         });
         if (!user) {
-            return res.status(401).json({ mensagem: "Dados não encontrados!" });
+            return res.status(401).json({ mensagem: "Usuário e senha não conferem!" });
         }
         let resultado = await bcrypt.compare(password, user.password);
 

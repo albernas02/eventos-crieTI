@@ -48,7 +48,6 @@ import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import { RxExit } from "react-icons/rx";
 import { HiOutlineDocumentReport } from "react-icons/hi";
 
-
 interface LinkItemProps {
     name: string
     icon: IconType
@@ -72,7 +71,6 @@ interface SidebarProps extends BoxProps {
 }
 
 const LinkItems: Array<LinkItemProps> = [
-    { name: 'Home', icon: FiHome, href: "/" },
     { name: 'Eventos', icon: HiOutlineCalendarDays, href: "/eventos" },
     { name: 'Usuários', icon: HiOutlineUsers, href: "/admin/clientes", permission: "users" },
     { name: 'Relatório de Eventos', icon: HiOutlineDocumentReport, href: "/admin/encerrados", permission: "users" },

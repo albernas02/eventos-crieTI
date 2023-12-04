@@ -29,7 +29,7 @@ export class ExportController {
           padding: 10px
         }
         </style>
-        <h1>Comprovante de comparecimento</h1>
+        <h1>Relatório de Eventos</h1>
       <table border="1">`;
 
     let events: Events[] = await Events.find();
@@ -101,7 +101,7 @@ export class ExportController {
           padding: 10px
         }
         </style>
-        <h1>Lista eventos</h1>
+        <h1>Comprovante de comparecimento</h1>
       <table border="1">`;
 
     let ticket: Tickets | any = await Tickets.findOne({
@@ -118,12 +118,15 @@ export class ExportController {
     html += `<tr>
       <th>Nome</th>
       <th>Evento</th>
+      <th>Data</th>
       <th>Presente</th>`;
 
-    let ok = "Esteve presente"
+    let ok = "Esteve presente neste evento"
     html += `<tr>
         <td>${ticket.client.name}</td>
         <td>${ticket.event.name}</td>
+        <td>${ticket.event.startDate}</td>
+        
         <td>${ok}</td>`;
 
     html += "</table>";

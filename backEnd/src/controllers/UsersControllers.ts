@@ -28,7 +28,7 @@ export class UsersControllers {
             phone: body.phone,
             CPF: body.CPF,
             address: body.address,
-            situation: 'A'
+            situation: 'Ativo'
         }).save();
 
         return res.status(200).json(user);
@@ -38,15 +38,20 @@ export class UsersControllers {
         let body = req.body;
         let user: Users = res.locals.user;
 
-        let password = await bcrypt.hash(body.password, 10);
+        
 
         user.name = body.name;
         user.email = body.email;
-        user.password = password;
         user.phone = body.phone;
         user.CPF = body.CPF;
         user.address = body.address;
-        user.situation = 'A';
+        user.situation = body.situation;
+
+        if (body.password) {
+            let password = await bcrypt.hash(body.password, 10);
+            user.password = password;
+        }
+        
 
         await user.save()
 
@@ -60,7 +65,7 @@ export class UsersControllers {
             return res.status(200).json({ message: "Evento não encontrado" });
         }
 
-        user.situation = 'I';
+        user.situation = 'Inativo';
 
         await user.save()
 

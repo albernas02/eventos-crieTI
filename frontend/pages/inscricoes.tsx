@@ -63,7 +63,7 @@ export default function Inscricoes() {
                             key={evento.id}
                             id={evento.id}
                             nome={evento.name}
-                            momento={moment(evento.startDate).format('llll')}
+                            momento={moment(evento.startDate)}
                             valor={evento.price.replace(",", ".")}
                             endereco={evento.address}
                             tipo={evento.type}
@@ -160,7 +160,7 @@ function EventoCard({
                         {nome}
                     </Box>
 
-                    <Box>{moment(momento).format("lll")}</Box>
+                    <Box>{moment(momento).format("llll")}</Box>
 
 
                     <Box fontSize={"xs"}>{descricao}</Box>

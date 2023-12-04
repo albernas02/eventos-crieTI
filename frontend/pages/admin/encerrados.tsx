@@ -86,6 +86,7 @@ export default function Encerrados() {
                     <Thead>
                         <Tr>
                             <Th>Eventos</Th>
+                            <Th>Descrição</Th>
                             <Th>Participantes</Th>
                         </Tr>
                     </Thead>
@@ -93,6 +94,7 @@ export default function Encerrados() {
                         {
                             dados?.map(Eventos => <Tr>
                                 <Td>{Eventos.name}</Td>
+                                <Td>{Eventos.description}</Td>
                                 {/* ... */}
 
                                 <Td>

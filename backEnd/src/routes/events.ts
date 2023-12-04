@@ -15,6 +15,7 @@ async function validarPayload(req: Request, res: Response, next: NextFunction): 
         startDate: yup.string().required(),
         endDate: yup.string().required(),
         user: yup.number().min(1).required(),
+        situation: yup.string().nullable()
     });
 
     let payload = req.body;
