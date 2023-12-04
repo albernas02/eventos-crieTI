@@ -10,7 +10,7 @@ async function validarPayload(req: Request, res: Response, next: NextFunction): 
         name: yup.string().min(3).max(255).required(),
         type: yup.string().min(3).max(255).required(),
         description: yup.string().max(255).required(),
-        price: yup.string().min(3).max(255).required(),
+        price: yup.string().max(255).required(),
         address: yup.string().min(3).max(255).required(),
         startDate: yup.string().required(),
         endDate: yup.string().required(),
