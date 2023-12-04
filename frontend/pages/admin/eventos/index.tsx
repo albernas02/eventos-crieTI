@@ -251,7 +251,7 @@ export default function Eventos() {
                                 </FormControl>
 
                                 <FormControl id="imgUrl" mt={4}>
-                                    <FormLabel>Imagem</FormLabel>
+                                    <FormLabel>URL da Imagem</FormLabel>
                                     <Input type="url" {...register('imgUrl')} />
                                 </FormControl>
                             </form>
