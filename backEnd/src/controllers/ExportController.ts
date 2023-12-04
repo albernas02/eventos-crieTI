@@ -10,7 +10,6 @@ export class ExportController {
   async downloadPdf(req: Request, res: Response) {
     let body = req.body;
     let html: string = '';
-    let name;
 
     html = `<style>
         *{
@@ -45,7 +44,6 @@ export class ExportController {
       <th>Data de saida</th>
       <th>Situação<th></tr>`;
     events.forEach((element) => {
-      name = element.name
       html += `<tr>
         <td>${element.id}</td>
         <td>${element?.user?.name}</td>
@@ -61,7 +59,7 @@ export class ExportController {
     html += "</table>";
     let today = new Date(Date.now());
     let data = today.toLocaleString(); // "30/1/2022"
-    html += `<div>Gerado por: ${name} às ${data}</div>`;
+    html += `<div>Gerado às ${data}</div>`;
 
     let pdf = await ExportController.pdf(html);
 
@@ -197,7 +195,7 @@ export class ExportController {
       from: "atur.albernas2002@outlook.com",
       to: body.email,
       subject: "Bem vindo ao Crie_TI eventos",
-      html: `Estamos muito felizes em ter você conosco${body.name}!`,
+      html: `Estamos muito felizes em ter você conosco ${body.name}!`,
     };
 
     let transporter = nodemailer.createTransport(emailConfig);
