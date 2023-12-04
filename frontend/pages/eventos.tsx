@@ -116,7 +116,7 @@ function EventoCard({
                 _setInscrito(false);
                 toast.success("Inscrição cancelada com sucesso!");
             } catch (e) {
-                toast.error(e?.response?.data?.mensagem || "Algo deu errado!");
+                toast.error((e as any)?.response?.data?.mensagem || "Algo deu errado!");
             }
         } else {
 
@@ -126,7 +126,7 @@ function EventoCard({
                 _setInscrito(true);
                 toast.success("Inscrito com sucesso");
             } catch (e) {
-                toast.error(e?.response?.data?.mensagem || "Algo deu errado!");
+                toast.error((e as any)?.response?.data?.mensagem || "Algo deu errado!");
             }
         }
         setLoading(false);

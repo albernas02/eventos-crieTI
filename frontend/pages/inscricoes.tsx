@@ -36,13 +36,13 @@ export default function Inscricoes() {
         carregarDados();
     }, [])
 
-    function removerEvento(id) {
+    function removerEvento(id: any) {
         setDados(tickets => {
             return tickets.filter(ticket => ticket.event.id != id);
         })
     }
 
-    function marcarCheckin(id) {
+    function marcarCheckin(id: any) {
         setDados(tickets => {
             return tickets.map(ticket => {
                 if (ticket.event.id == id) {
@@ -104,7 +104,7 @@ function EventoCard({
             removerEvento(id);
             toast.success("Inscrição cancelada com sucesso!");
         } catch (e) {
-            toast.error(e?.response?.data?.mensagem || "Algo deu errado!");
+            toast.error((e as any)?.response?.data?.mensagem || "Algo deu errado!");
         }
 
         setLoading(false);
@@ -120,7 +120,7 @@ function EventoCard({
             marcarCheckin(id);
             toast.success("Checkin realizado com sucesso!");
         } catch (e) {
-            toast.error(e?.response?.data?.mensagem || "Algo deu errado!");
+            toast.error((e as any)?.response?.data?.mensagem || "Algo deu errado!");
         }
 
         setLoading(false);

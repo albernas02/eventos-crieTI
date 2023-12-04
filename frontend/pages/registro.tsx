@@ -40,7 +40,7 @@ export default function Registro() {
         toast.success("Criado com sucesso! Redirecionando para o login...");
         push("/login");
     } catch (err) {
-        toast.error(err?.response?.data?.message || err?.response?.data?.erros?.join(", ") || "Ops! Algo deu errado.");
+        toast.error((err as any)?.response?.data?.message || (err as any)?.response?.data?.erros?.join(", ") || "Ops! Algo deu errado.");
     }
     setLoading(false);
   }

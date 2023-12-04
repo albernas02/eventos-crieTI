@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "dev": "nodemon --watch 'src/' --exec 'ts-node src/app.ts' -e ts",
-    "build": "tsc"
+    "build": "rimraf ./dist && tsc"
+    
   },
   "author": "",
   "license": "ISC",

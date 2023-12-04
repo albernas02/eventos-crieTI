@@ -222,7 +222,7 @@ export default function AppLayout({ children }: any) {
             <NextNProgress
                 options={{
                     parent: "#content-container",
-                    spinner: false
+                    showSpinner: false
                 }}
             />
             <SidebarContent onClose={() => onClose} display={{ base: 'none', md: 'block' }} />
