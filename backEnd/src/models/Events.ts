@@ -36,7 +36,7 @@ export class Events extends BaseEntity {
     @Column({nullable: true, length: 1000 })
     imgUrl: string;
 
-    @ManyToOne(() => Users, user => user.events)
+    @ManyToOne(() => Users, user => user.events, { eager: true })
     @JoinColumn({ name: "user_id" })
     user: Users;
 
