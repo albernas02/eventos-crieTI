@@ -27,9 +27,7 @@ export class TicketControllers {
             presence: false
         }).save();
 
-        try {
-            // await exportController.sendEmailBuy(req, res);
-        } catch (e) { }
+        await exportController.sendEmailBuy(req, res);
 
         return res.status(200).json(ticket);
     }
@@ -48,7 +46,7 @@ export class TicketControllers {
     }
 
     async listWithEvent(req: Request, res: Response): Promise<Response> {
-        let event: Events | any = await Events.findOneBy({id : Number(req.params.id)});
+        let event: Events | any = await Events.findOneBy({ id: Number(req.params.id) });
 
         let tickets: Tickets[] = await Tickets.find({
             where: {

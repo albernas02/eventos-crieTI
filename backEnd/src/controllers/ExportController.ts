@@ -247,10 +247,10 @@ export class ExportController {
         return res.status(401).send("Erro ao enviar email" + error);
       } else {
         console.log("Email enviado: " + info.response);
-        return res.status(200).send("Email enviado: " + info.response);
+        return res.status(200);
       }
     });
 
-    return res.status(401);
+    return res.status(200);
   }
 }
