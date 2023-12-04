@@ -71,6 +71,7 @@ export default function Inscricoes() {
                             removerEvento={removerEvento}
                             marcarCheckin={marcarCheckin}
                             checkinFeito={presence}
+                            imagemUrl={evento.imgUrl ? evento.imgUrl: "https://via.placeholder.com/300x200?text=Sem%20Imagem"}
                         />
                     )}
             </Flex>
@@ -81,7 +82,7 @@ export default function Inscricoes() {
 function EventoCard({
     id,
     nome,
-    imagemUrl = "https://bit.ly/2Z4KKcF",
+    imagemUrl,
     momento,
     valor,
     endereco,
@@ -131,7 +132,7 @@ function EventoCard({
                 <Spinner h="10" w="10" color="purple.500" />
             </Flex>
             <Box borderWidth="1px" borderRadius="lg" overflow="hidden">
-                <Image src={imagemUrl} alt="Evento" />
+                <Image src={imagemUrl} width="500px" height="300px" alt="Evento" />
 
                 <Box p="6">
                     <Box display="flex" alignItems="baseline">

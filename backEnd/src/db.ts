@@ -11,7 +11,7 @@ const AppDataSource = new DataSource({
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
     synchronize: true,
-    logging: true,//Boolean(process.env.LOGGING),//para não aparecer os logs de inicializacao da DB
+    logging: false,//Boolean(process.env.LOGGING),//para não aparecer os logs de inicializacao da DB
     entities: [__dirname + '/models/*.{ts,js}'],
     subscribers: [],
     migrations: [],

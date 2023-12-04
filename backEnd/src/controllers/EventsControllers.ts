@@ -61,6 +61,7 @@ export class EventsControllers {
             startDate: startDate,
             endDate: endDate,
             situation: body.situation,
+            imgUrl: body.imgUrl,
             user: user,
         }).save();
 
@@ -89,6 +90,8 @@ export class EventsControllers {
         event.endDate = endDate;
         event.user = user;
         event.situation = body.situation;
+        event.imgUrl = body.imgUrl;
+
 
         await event.save();
 

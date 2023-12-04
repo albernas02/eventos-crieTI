@@ -33,6 +33,9 @@ export class Events extends BaseEntity {
     @Column()
     situation: string;
 
+    @Column({nullable: true, length: 1000 })
+    imgUrl: string;
+
     @ManyToOne(() => Users, user => user.events)
     @JoinColumn({ name: "user_id" })
     user: Users;

@@ -2,9 +2,8 @@ import AppLayout from "@/components/layouts/AppLayout";
 import { PiFileCsvLight, PiPencil } from "react-icons/pi";
 import { PiFilePdfLight } from "react-icons/pi";
 import { PiPlusLight } from "react-icons/pi";
-import { Select } from '@chakra-ui/react'
-
 import {
+    Image, Select,
     Table,
     Thead,
     Tbody,
@@ -21,9 +20,6 @@ import {
     FormControl,
     FormLabel,
     Input,
-} from "@chakra-ui/react";
-
-import {
     Modal,
     ModalOverlay,
     ModalContent,
@@ -53,6 +49,7 @@ interface IEvento {
     situation: string;
     user: number;
     type: string;
+    imgUrl: string;
 }
 
 export const getServerSideProps: GetServerSideProps = checkUserAuth(async (ctx) => {
@@ -62,14 +59,14 @@ export const getServerSideProps: GetServerSideProps = checkUserAuth(async (ctx) 
 }, "users");
 
 export default function Eventos() {
-    const [ dados, setDados ] = useState<IEvento[]>([]);
+    const [dados, setDados] = useState<IEvento[]>([]);
 
     async function carregarDados() {
         let response = await apiClient.get('/events');
 
         setDados(response.data);
     }
-    
+
     useEffect(() => {
         carregarDados();
     }, []);
@@ -81,25 +78,25 @@ export default function Eventos() {
                 <Flex gap="2">
 
                     <Link href="http://127.0.0.1:3000/csv" download target="_blank">
-                    <Button
-                        size={"sm"}
-                        leftIcon={<PiFileCsvLight />}
-                        colorScheme="purple"
-                        variant={"outline"}
-                    >
-                        CSV
-                    </Button>
+                        <Button
+                            size={"sm"}
+                            leftIcon={<PiFileCsvLight />}
+                            colorScheme="purple"
+                            variant={"outline"}
+                        >
+                            CSV
+                        </Button>
                     </Link>
 
                     <Link href="http://127.0.0.1:3000/pdf" download target="_blank">
-                    <Button
-                        size={"sm"}
-                        leftIcon={<PiFilePdfLight />}
-                        colorScheme="purple"
-                        variant={"outline"}
-                    >
-                        PDV
-                    </Button>
+                        <Button
+                            size={"sm"}
+                            leftIcon={<PiFilePdfLight />}
+                            colorScheme="purple"
+                            variant={"outline"}
+                        >
+                            PDV
+                        </Button>
                     </Link>
                     <CadastroEventos callback={carregarDados} />
                 </Flex>
@@ -108,6 +105,7 @@ export default function Eventos() {
                 <Table size="lg" variant="simple">
                     <Thead>
                         <Tr>
+                            <Th>Imagem</Th>
                             <Th>Evento</Th>
                             <Th>Descrição</Th>
                             <Th>Valor</Th>
@@ -122,6 +120,7 @@ export default function Eventos() {
                     <Tbody>
                         {
                             dados?.map(evento => <Tr>
+                                <Td>{evento.imgUrl ? <Image src={evento.imgUrl} /> : "-"}</Td>
                                 <Td>{evento.name}</Td>
                                 <Td>{evento.description}</Td>
                                 <Td>{evento.price}</Td>
@@ -133,7 +132,7 @@ export default function Eventos() {
                                 {/* ... */}
 
                                 <Td>
-                                    <CadastroEventos callback={carregarDados} evento={evento} textoBotao="Editar" icone={<PiPencil/>} />
+                                    <CadastroEventos callback={carregarDados} evento={evento} textoBotao="Editar" icone={<PiPencil />} />
                                 </Td>
                             </Tr>)
                         }
@@ -145,7 +144,7 @@ export default function Eventos() {
     );
 
 
-    function CadastroEventos({ evento, textoBotao = "Novo", icone = <PiPlusLight />, callback }: {evento?: IEvento, textoBotao?: string, icone?: any, callback: any}) {
+    function CadastroEventos({ evento, textoBotao = "Novo", icone = <PiPlusLight />, callback }: { evento?: IEvento, textoBotao?: string, icone?: any, callback: any }) {
         const { isOpen, onOpen, onClose } = useDisclosure();
         const { getUser } = useContext(AuthContext);
 
@@ -158,8 +157,8 @@ export default function Eventos() {
                 startDate: moment(evento?.startDate).format('YYYY-MM-DD\THH:mm'),
                 endDate: moment(evento?.endDate).format('YYYY-MM-DD\THH:mm'),
                 type: evento?.type,
-                situation: evento?.situation
-
+                situation: evento?.situation,
+                imgUrl: evento?.imgUrl
             }
         });
 
@@ -249,6 +248,11 @@ export default function Eventos() {
                                         <option value='Ativo'>Ativo</option>
                                         <option value='Inativo'>Inativo</option>
                                     </Select>
+                                </FormControl>
+
+                                <FormControl id="imgUrl" mt={4}>
+                                    <FormLabel>Imagem</FormLabel>
+                                    <Input type="url" {...register('imgUrl')} />
                                 </FormControl>
                             </form>
                         </ModalBody>
