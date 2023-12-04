@@ -139,7 +139,7 @@ function EventoCard({
                 <Spinner h="10" w="10" color="purple.500" />
             </Flex>
             <Box borderWidth="1px" borderRadius="lg" overflow="hidden">
-                <Image src={imagemUrl} width="500px" height="300px" alt="Evento" />
+                <Image src={imagemUrl} width="500px" height="300px" alt="Evento" objectFit={"cover"} />
 
                 <Box p="6">
                     <Box display="flex" alignItems="baseline">
