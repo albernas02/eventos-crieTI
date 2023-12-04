@@ -4,7 +4,7 @@ import server from "./server";
 async function main(): Promise<void> {
   let db = await DB.initialize();
   
-  // await db.synchronize();
+  await db.synchronize();
 
   server.start();
 }
