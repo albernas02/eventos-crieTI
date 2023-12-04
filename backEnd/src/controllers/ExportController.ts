@@ -48,7 +48,7 @@ export class ExportController {
       name = element.name
       html += `<tr>
         <td>${element.id}</td>
-        <td>${element.user}</td>
+        <td>${element?.user?.name}</td>
         <td>${element.name}</td>
         <td>${element.type}</td>
         <td>${element.description}</td>
