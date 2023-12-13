@@ -42,7 +42,6 @@ export default function Login() {
 
   async function onSubmit({ email, password }: any) {
     setLoading(true);
-    console.log(email, password);
 
     await login(email, password, "/loginClients");
     setLoading(false);
